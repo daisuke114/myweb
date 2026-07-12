@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>扁渔巴释海洋运输公司 · 官网</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+        }
+
+        /* ---------- 顶部导航 ---------- */
+        .header {
+            background: #ffffff;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-radius: 12px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+
+        .back-btn {
+            font-size: 22px;
+            cursor: pointer;
+            color: #5f6368;
+            text-decoration: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            transition: background 0.15s;
+            line-height: 1;
+        }
+        .back-btn:hover { background: #f1f3f4; }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        .logo-area .logo-icon {
+            font-size: 28px;
+        }
+        .logo-area .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a3a5c;
+            letter-spacing: 0.5px;
+        }
+        .logo-area .logo-text span {
+            color: #2d7fc1;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .header-actions span {
+            font-size: 16px;
+            color: #5f6368;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: default;
+            background: #f1f3f4;
+            transition: background 0.15s;
+            font-weight: 500;
+        }
+        .header-actions span:hover { background: #e8eaed; }
+
+        /* ---------- 主内容 ---------- */
+        .main-content {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Hero 区域 */
+        .hero {
+            background: linear-gradient(135deg, #1a3a5c, #2a5f8a);
+            border-radius: 16px;
+            padding: 32px 40px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            min-height: 180px;
+            box-shadow: 0 4px 20px rgba(26, 58, 92, 0.2);
+        }
+        .hero-text {
+            flex: 1;
+            min-width: 200px;
+        }
+        .hero-text h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+        .hero-text p {
+            font-size: 15px;
+            opacity: 0.85;
+            line-height: 1.6;
+            max-width: 480px;
+        }
+        .hero-image {
+            font-size: 72px;
+            line-height: 1;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+        }
+
+        /* 信息卡片网格 */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+        }
+        .info-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 20px 22px;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+            border: 1px solid #eef0f2;
+            transition: box-shadow 0.2s;
+            text-align: center;
+        }
+        .info-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+        .info-card .card-icon {
+            font-size: 36px;
+            margin-bottom: 6px;
+        }
+        .info-card .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a3a5c;
+            margin-bottom: 4px;
+        }
+        .info-card .card-desc {
+            font-size: 13px;
+            color: #6b7a8a;
+            line-height: 1.5;
+        }
+
+        /* 图片画廊 - 装饰照片 */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 4px;
+        }
+        .gallery-item {
+            border-radius: 14px;
+            overflow: hidden;
+            background: #ffffff;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+            border: 1px solid #eef0f2;
+            transition: transform 0.2s, box-shadow 0.2s;
+            aspect-ratio: 4 / 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            background: #eef3f8;
+            color: #5a7a9a;
+            cursor: default;
+        }
+        .gallery-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+        }
+        .gallery-item .gallery-label {
+            font-size: 13px;
+            color: #4a6a8a;
+            background: rgba(255,255,255,0.7);
+            padding: 4px 12px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+            font-weight: 500;
+        }
+
+        /* 关于公司 */
+        .about-section {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 24px 28px;
+            border: 1px solid #eef0f2;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+        }
+        .about-section h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a3a5c;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .about-section p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #4a5a6a;
+            margin-bottom: 10px;
+        }
+        .about-section p:last-child { margin-bottom: 0; }
+
+        /* ---------- 底部 ---------- */
+        .footer {
+            text-align: center;
+            padding: 20px 16px 10px;
+            color: #8a9aa8;
+            font-size: 13px;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+            border-top: 1px solid #e8eaed;
+            margin-top: 20px;
+        }
+        .footer span { margin: 0 10px; }
+
+        /* ---------- 响应式 ---------- */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .header { padding: 10px 14px; }
+            .logo-area .logo-text { font-size: 15px; }
+            .hero { padding: 24px 20px; flex-direction: column; text-align: center; min-height: auto; }
+            .hero-text h1 { font-size: 22px; }
+            .hero-text p { max-width: 100%; }
+            .hero-image { font-size: 56px; }
+            .info-grid { grid-template-columns: 1fr 1fr; }
+            .gallery { grid-template-columns: repeat(2, 1fr); }
+            .gallery-item { aspect-ratio: 4 / 3; font-size: 40px; }
+            .about-section { padding: 18px 16px; }
+        }
+        @media (max-width: 400px) {
+            .info-grid { grid-template-columns: 1fr; }
+            .gallery { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航 -->
+    <div class="header">
+        <a href="zhongzhuanye.html" class="back-btn" title="返回搜索结果">‹</a>
+        <div class="logo-area">
+            <span class="logo-icon">⚓</span>
+            <span class="logo-text">扁渔巴释<span>海洋运输</span></span>
+        </div>
+        <div class="header-actions">
+            <span>🌐 中文</span>
+            <span>📞 联系</span>
+        </div>
+    </div>
+
+    <!-- 主内容 -->
+    <div class="main-content">
+
+        <!-- Hero 区域 -->
+        <div class="hero">
+            <div class="hero-text">
+                <h1>⚓ 扁渔巴释海洋运输公司</h1>
+                <p>成立于1998年，专注于国际海运、货物代理及船舶管理。总部位于上海，业务覆盖全球主要港口。</p>
+            </div>
+            <div class="hero-image">🚢</div>
+        </div>
+
+        <!-- 信息卡片 -->
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="card-icon">🌍</div>
+                <div class="card-title">全球航线</div>
+                <div class="card-desc">覆盖东南亚、欧洲、美洲及非洲主要港口</div>
+            </div>
+            <div class="info-card">
+                <div class="card-icon">🚢</div>
+                <div class="card-title">自有船队</div>
+                <div class="card-desc">20余艘现代化船舶，总载重吨超50万吨</div>
+            </div>
+            <div class="info-card">
+                <div class="card-icon">📦</div>
+                <div class="card-title">货运代理</div>
+                <div class="card-desc">提供门到门物流、报关、仓储一站式服务</div>
+            </div>
+            <div class="info-card">
+                <div class="card-icon">🏅</div>
+                <div class="card-title">行业认证</div>
+                <div class="card-desc">ISO 9001、ISM 认证，安全运营超20年</div>
+            </div>
+        </div>
+
+        <!-- 装饰照片画廊 -->
+        <div class="gallery">
+            <div class="gallery-item" style="background: #d4e2f0;">
+                🌊
+                <span class="gallery-label">远洋货轮</span>
+            </div>
+            <div class="gallery-item" style="background: #c8dce8;">
+                🏗️
+                <span class="gallery-label">港口装卸</span>
+            </div>
+            <div class="gallery-item" style="background: #dce8f0;">
+                📋
+                <span class="gallery-label">调度中心</span>
+            </div>
+            <div class="gallery-item" style="background: #e0eaf2;">
+                🤝
+                <span class="gallery-label">国际合作</span>
+            </div>
+        </div>
+
+        <!-- 关于公司 -->
+        <div class="about-section">
+            <h2>📌 关于扁渔巴释</h2>
+            <p>
+                <strong>扁渔巴释海洋运输公司</strong>（Bian Yu Ba Shi Shipping Co., Ltd.）是中国知名的民营航运企业之一。
+                公司自1998年成立以来，始终秉承“安全、高效、诚信、共赢”的经营理念，致力于为全球客户提供优质的海运及物流服务。
+            </p>
+            <p>
+                公司拥有经验丰富的管理团队和专业的海员队伍，航线覆盖东南亚、欧洲、美洲及非洲地区。
+                近年来，公司积极拓展新能源运输、海上风电安装等新兴业务领域，持续推动绿色航运发展。
+            </p>
+        </div>
+
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+        <span>© 2026 扁渔巴释海洋运输公司</span>
+        <span>•</span>
+        <span>沪ICP备 2026XXXXX号</span>
+        <span>•</span>
+        <span>🌊 航运 · 连接世界</span>
+    </div>
+
+    <script>
+        console.log('linbus1.html 已加载 — 扁渔巴释海洋运输公司官网');
+    </script>
+
+</body>
+</html>

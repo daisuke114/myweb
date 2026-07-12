@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>员工中心 · 张子轩</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+        }
+
+        /* ---------- 顶部导航 ---------- */
+        .header {
+            background: #ffffff;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-radius: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            margin-bottom: 20px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+
+        .back-btn {
+            font-size: 22px;
+            cursor: pointer;
+            color: #5f6368;
+            text-decoration: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            transition: background 0.15s;
+            line-height: 1;
+        }
+        .back-btn:hover { background: #f1f3f4; }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        .logo-area .logo-icon {
+            font-size: 24px;
+        }
+        .logo-area .logo-text {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a3a5c;
+        }
+        .logo-area .logo-text span {
+            color: #2d7fc1;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .header-actions span {
+            font-size: 13px;
+            color: #4a5a6a;
+            padding: 5px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            background: #f1f3f4;
+            font-weight: 500;
+            transition: background 0.15s;
+        }
+        .header-actions span:hover {
+            background: #e0e6ec;
+        }
+        .header-actions span:active {
+            background: #d0d6dc;
+        }
+
+        /* ---------- 主内容 ---------- */
+        .main-content {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 欢迎横幅 */
+        .welcome-banner {
+            background: linear-gradient(135deg, #1a3a5c, #2a5f8a);
+            border-radius: 16px;
+            padding: 24px 28px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 4px 20px rgba(26, 58, 92, 0.2);
+        }
+        .welcome-banner .welcome-text h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .welcome-banner .welcome-text p {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+        .welcome-banner .welcome-avatar {
+            font-size: 56px;
+            line-height: 1;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
+        }
+
+        /* 个人信息卡片 */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .profile-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 18px 20px;
+            border: 1px solid #e8edf2;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
+        }
+        .profile-card .card-label {
+            font-size: 12px;
+            color: #8a9aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        .profile-card .card-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a3a5c;
+            margin-top: 4px;
+        }
+        .profile-card .card-value small {
+            font-size: 14px;
+            font-weight: 400;
+            color: #5a7a8a;
+        }
+
+        /* 双栏布局 */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* 通用卡片 */
+        .info-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 20px 22px;
+            border: 1px solid #e8edf2;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
+        }
+        .info-card .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a3a5c;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 动态列表 */
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f4f8;
+        }
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        .activity-item .activity-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            width: 32px;
+            text-align: center;
+        }
+        .activity-item .activity-content {
+            flex: 1;
+        }
+        .activity-item .activity-text {
+            font-size: 14px;
+            color: #3a4a5a;
+            line-height: 1.5;
+        }
+        .activity-item .activity-time {
+            font-size: 12px;
+            color: #8a9aaa;
+            margin-top: 2px;
+        }
+
+        /* 待办事项 */
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f4f8;
+        }
+        .todo-item:last-child {
+            border-bottom: none;
+        }
+        .todo-item .todo-check {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #d0d8e0;
+            flex-shrink: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, border-color 0.2s;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .todo-item .todo-check.done {
+            background: #27ae60;
+            border-color: #27ae60;
+        }
+        .todo-item .todo-check.fail {
+            background: #e74c3c;
+            border-color: #e74c3c;
+        }
+        .todo-item .todo-text {
+            font-size: 14px;
+            color: #3a4a5a;
+            flex: 1;
+        }
+        .todo-item .todo-text.done-text {
+            text-decoration: line-through;
+            color: #8a9aaa;
+        }
+        .todo-item .todo-text.fail-text {
+            text-decoration: line-through;
+            color: #e74c3c;
+        }
+
+        /* ---------- 底部 ---------- */
+        .footer {
+            text-align: center;
+            padding: 20px 16px 10px;
+            color: #8a9aa8;
+            font-size: 13px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            border-top: 1px solid #e0e6ec;
+            margin-top: 20px;
+        }
+        .footer span { margin: 0 10px; }
+
+        /* ---------- 响应式 ---------- */
+        @media (max-width: 700px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .header { padding: 10px 14px; }
+            .welcome-banner { padding: 18px 20px; flex-direction: column; text-align: center; }
+            .welcome-banner .welcome-avatar { font-size: 44px; }
+            .profile-grid { grid-template-columns: 1fr 1fr; }
+            .info-card { padding: 16px; }
+        }
+        @media (max-width: 400px) {
+            .profile-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航 -->
+    <div class="header">
+        <a href="linbus2.html" class="back-btn" title="返回招聘页">‹</a>
+        <div class="logo-area">
+            <span class="logo-icon">👤</span>
+            <span class="logo-text">员工中心<span> · 张子轩</span></span>
+        </div>
+        <div class="header-actions">
+            <span id="personalBtn">📋 个人</span>
+            <span id="logoutBtn">🚪 退出</span>
+        </div>
+    </div>
+
+    <!-- 主内容 -->
+    <div class="main-content">
+
+        <!-- 欢迎横幅 -->
+        <div class="welcome-banner">
+            <div class="welcome-text">
+                <h2>⚓ 欢迎回来，张子轩</h2>
+                <p>扁渔巴释海洋运输公司 · 普通船员</p>
+            </div>
+            <div class="welcome-avatar">🧑‍✈️</div>
+        </div>
+
+        <!-- 个人信息 -->
+        <div class="profile-grid">
+            <div class="profile-card">
+                <div class="card-label">👤 姓名</div>
+                <div class="card-value">张子轩</div>
+            </div>
+            <div class="profile-card">
+                <div class="card-label">📋 岗位</div>
+                <div class="card-value">普通船员 <small>· 甲板部</small></div>
+            </div>
+            <div class="profile-card">
+                <div class="card-label">🆔 工号</div>
+                <div class="card-value">BYBS-2026-078</div>
+            </div>
+            <div class="profile-card">
+                <div class="card-label">📅 入职日期</div>
+                <div class="card-value">2026-05-15</div>
+            </div>
+        </div>
+
+        <!-- 双栏：动态 + 待办 -->
+        <div class="two-column">
+
+            <!-- 工作动态 -->
+            <div class="info-card">
+                <div class="card-title">📬 工作动态</div>
+
+                <div class="activity-item">
+                    <span class="activity-icon">🚢</span>
+                    <div class="activity-content">
+                        <div class="activity-text">「扁渔巴释号」已完成装货，准备启航</div>
+                        <div class="activity-time">2026-07-08 14:30</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <span class="activity-icon">📋</span>
+                    <div class="activity-content">
+                        <div class="activity-text">月度安全培训考核通过（98分）</div>
+                        <div class="activity-time">2026-07-06 09:15</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <span class="activity-icon">⚓</span>
+                    <div class="activity-content">
+                        <div class="activity-text">参与甲板设备维护保养工作</div>
+                        <div class="activity-time">2026-07-04 16:40</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <span class="activity-icon">📩</span>
+                    <div class="activity-content">
+                        <div class="activity-text">收到下季度航行计划通知</div>
+                        <div class="activity-time">2026-07-02 11:00</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 待办事项 -->
+            <div class="info-card">
+                <div class="card-title">✅ 待办事项</div>
+
+                <div class="todo-item">
+                    <span class="todo-check done" onclick="toggleTodo(this)">✓</span>
+                    <span class="todo-text done-text">完成安全培训考核</span>
+                </div>
+
+                <div class="todo-item">
+                    <span class="todo-check" onclick="toggleTodo(this)"></span>
+                    <span class="todo-text">提交航行日志</span>
+                </div>
+
+                <div class="todo-item">
+                    <span class="todo-check" onclick="toggleTodo(this)"></span>
+                    <span class="todo-text">检查个人救生设备</span>
+                </div>
+
+                <div class="todo-item">
+                    <span class="todo-check" onclick="toggleTodo(this)"></span>
+                    <span class="todo-text">参加明天上午的船员会议</span>
+                </div>
+
+                <div class="todo-item">
+                    <span class="todo-check" onclick="toggleTodo(this)"></span>
+                    <span class="todo-text">整理航海笔记</span>
+                </div>
+
+                <!-- 新增：完成心理评估（点击后打叉） -->
+                <div class="todo-item" id="psychEvalItem">
+                    <span class="todo-check" id="psychEvalCheck" onclick="togglePsychEval()"></span>
+                    <span class="todo-text" id="psychEvalText">完成心理评估</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+        <span>© 2026 扁渔巴释海洋运输公司</span>
+        <span>•</span>
+        <span>👤 张子轩 · 员工中心</span>
+        <span>•</span>
+        <span>🌊 安全航行 · 每日精进</span>
+    </div>
+
+    <script>
+        // ---------- 待办事项切换（打勾） ----------
+        function toggleTodo(element) {
+            const isDone = element.classList.contains('done');
+            const parent = element.parentElement;
+            const textSpan = parent.querySelector('.todo-text');
+
+            if (isDone) {
+                // 取消完成
+                element.classList.remove('done');
+                element.textContent = '';
+                textSpan.classList.remove('done-text');
+            } else {
+                // 标记完成
+                element.classList.add('done');
+                element.textContent = '✓';
+                textSpan.classList.add('done-text');
+            }
+        }
+
+        // ---------- 心理评估专用（打叉） ----------
+        let psychEvalDone = false;
+
+        function togglePsychEval() {
+            const check = document.getElementById('psychEvalCheck');
+            const text = document.getElementById('psychEvalText');
+
+            if (psychEvalDone) {
+                // 取消
+                check.classList.remove('fail');
+                check.textContent = '';
+                text.classList.remove('fail-text');
+                psychEvalDone = false;
+            } else {
+                // 标记为打叉
+                check.classList.add('fail');
+                check.textContent = '✗';
+                text.classList.add('fail-text');
+                psychEvalDone = true;
+            }
+        }
+
+        // ---------- 个人按钮跳转 ----------
+        document.getElementById('personalBtn').addEventListener('click', function() {
+            window.location.href = 'zhangzixuan2.html';
+        });
+
+        // ---------- 退出按钮 ----------
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('确认退出登录吗？')) {
+                window.location.href = 'linbus2.html';
+            }
+        });
+
+        console.log('zhangzixuan.html 已加载 — 员工中心');
+        console.log('👤 欢迎，张子轩！');
+        console.log('💡 点击「完成心理评估」会显示 ✗ 而不是 ✓');
+        console.log('💡 点击「个人」按钮会跳转到 zhangzixuan2.html');
+    </script>
+
+</body>
+</html>

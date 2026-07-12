@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>船长中心 · 路景川</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+        }
+
+        /* ---------- 顶部导航 ---------- */
+        .header {
+            background: #ffffff;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-radius: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            margin-bottom: 20px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+
+        .back-btn {
+            font-size: 22px;
+            cursor: pointer;
+            color: #5f6368;
+            text-decoration: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            transition: background 0.15s;
+            line-height: 1;
+        }
+        .back-btn:hover { background: #f1f3f4; }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        .logo-area .logo-icon {
+            font-size: 24px;
+        }
+        .logo-area .logo-text {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a3a5c;
+        }
+        .logo-area .logo-text span {
+            color: #2d7fc1;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .header-actions span {
+            font-size: 13px;
+            color: #4a5a6a;
+            padding: 5px 14px;
+            border-radius: 20px;
+            cursor: default;
+            background: #f1f3f4;
+            font-weight: 500;
+        }
+
+        /* ---------- 主内容 ---------- */
+        .main-content {
+            max-width: 880px;
+            width: 100%;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 欢迎横幅 */
+        .welcome-banner {
+            background: linear-gradient(135deg, #1a3a5c, #2a5f8a);
+            border-radius: 16px;
+            padding: 24px 28px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 4px 20px rgba(26, 58, 92, 0.2);
+        }
+        .welcome-banner .welcome-text h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .welcome-banner .welcome-text p {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+        .welcome-banner .welcome-avatar {
+            font-size: 56px;
+            line-height: 1;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
+        }
+
+        /* 个人信息卡片 */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .profile-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 18px 20px;
+            border: 1px solid #e8edf2;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
+        }
+        .profile-card .card-label {
+            font-size: 12px;
+            color: #8a9aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        .profile-card .card-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a3a5c;
+            margin-top: 4px;
+        }
+        .profile-card .card-value small {
+            font-size: 14px;
+            font-weight: 400;
+            color: #5a7a8a;
+        }
+
+        /* 草稿箱卡片 */
+        .draft-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 20px 24px;
+            border: 1px solid #e8edf2;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
+        }
+        .draft-card .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a3a5c;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .draft-card .card-title .badge {
+            background: #e8edf2;
+            color: #4a5a6a;
+            font-size: 12px;
+            padding: 0 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .draft-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            background: #f5f8fc;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            border: 1px solid transparent;
+        }
+        .draft-item:last-child {
+            margin-bottom: 0;
+        }
+        .draft-item:hover {
+            background: #e8edf4;
+        }
+        .draft-item:active {
+            transform: scale(0.98);
+            background: #dce2e8;
+        }
+
+        .draft-item .draft-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        .draft-item .draft-info {
+            flex: 1;
+        }
+        .draft-item .draft-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a3a5c;
+        }
+        .draft-item .draft-meta {
+            font-size: 12px;
+            color: #7a8a9a;
+            margin-top: 2px;
+        }
+        .draft-item .draft-arrow {
+            font-size: 18px;
+            color: #8a9aaa;
+        }
+
+        /* 锁图标 */
+        .draft-item.locked .draft-name::after {
+            content: ' 🔒';
+            font-size: 14px;
+        }
+
+        /* ---------- 密码弹窗 ---------- */
+        .password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+        .password-overlay.show {
+            display: flex;
+        }
+
+        .password-modal {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 32px 28px 28px;
+            max-width: 380px;
+            width: 100%;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25);
+            animation: fadePop 0.25s ease-out;
+        }
+        @keyframes fadePop {
+            from { opacity: 0; transform: scale(0.95) translateY(12px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .password-modal .modal-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: #1a3a5c;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        .password-modal .modal-sub {
+            font-size: 14px;
+            color: #6a7a8a;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .password-modal .form-group {
+            margin-bottom: 16px;
+        }
+        .password-modal .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2a3a4a;
+            margin-bottom: 4px;
+        }
+        .password-modal .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #dce2e8;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+            background: #f8fafc;
+        }
+        .password-modal .form-group input:focus {
+            border-color: #2d7fc1;
+            background: #ffffff;
+        }
+
+        .password-modal .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 4px;
+        }
+        .password-modal .form-actions button {
+            flex: 1;
+            padding: 11px 0;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+        }
+        .password-modal .form-actions button:active {
+            transform: scale(0.96);
+        }
+        .password-modal .form-actions .btn-confirm {
+            background: #2d7fc1;
+            color: #fff;
+        }
+        .password-modal .form-actions .btn-confirm:hover {
+            background: #1f6ca8;
+        }
+        .password-modal .form-actions .btn-cancel {
+            background: #e8edf2;
+            color: #4a5a6a;
+        }
+        .password-modal .form-actions .btn-cancel:hover {
+            background: #dce2e8;
+        }
+
+        .password-modal .error-msg {
+            color: #e74c3c;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+
+        /* ---------- 体检报告弹窗 ---------- */
+        .report-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9998;
+            padding: 20px;
+        }
+        .report-overlay.show {
+            display: flex;
+        }
+
+        .report-modal {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 28px 28px 24px;
+            max-width: 460px;
+            width: 100%;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25);
+            animation: fadePop 0.25s ease-out;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .report-modal .report-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: #1a3a5c;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        .report-modal .report-sub {
+            font-size: 13px;
+            color: #7a8a9a;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .report-modal .report-body {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #3a4a5a;
+            border-top: 1px solid #e8edf2;
+            padding-top: 14px;
+        }
+        .report-modal .report-body .field {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #f0f4f8;
+        }
+        .report-modal .report-body .field:last-child {
+            border-bottom: none;
+        }
+        .report-modal .report-body .field .label {
+            color: #6a7a8a;
+            font-weight: 500;
+        }
+        .report-modal .report-body .field .value {
+            color: #1a3a5c;
+            font-weight: 600;
+        }
+        .report-modal .report-body .field .value.allergy {
+            color: #e74c3c;
+        }
+        .report-modal .report-close {
+            display: block;
+            width: 100%;
+            padding: 11px 0;
+            margin-top: 16px;
+            border: none;
+            border-radius: 12px;
+            background: #e8edf2;
+            color: #4a5a6a;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .report-modal .report-close:hover {
+            background: #dce2e8;
+        }
+
+        /* ---------- 底部 ---------- */
+        .footer {
+            text-align: center;
+            padding: 20px 16px 10px;
+            color: #8a9aa8;
+            font-size: 13px;
+            max-width: 880px;
+            margin: 0 auto;
+            width: 100%;
+            border-top: 1px solid #e0e6ec;
+            margin-top: 20px;
+        }
+        .footer span { margin: 0 10px; }
+
+        /* ---------- 响应式 ---------- */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .header { padding: 10px 14px; }
+            .welcome-banner { padding: 18px 20px; flex-direction: column; text-align: center; }
+            .welcome-banner .welcome-avatar { font-size: 44px; }
+            .profile-grid { grid-template-columns: 1fr 1fr; }
+            .draft-card { padding: 16px 18px; }
+            .draft-item { padding: 10px 14px; }
+            .report-modal { padding: 20px 18px; }
+            .password-modal { padding: 24px 18px 20px; }
+        }
+        @media (max-width: 400px) {
+            .profile-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航 -->
+    <div class="header">
+        <a href="linbus2.html" class="back-btn" title="返回招聘页">‹</a>
+        <div class="logo-area">
+            <span class="logo-icon">⚓</span>
+            <span class="logo-text">船长中心<span> · 路景川</span></span>
+        </div>
+        <div class="header-actions">
+            <span>📋 管理</span>
+            <span>🚪 退出</span>
+        </div>
+    </div>
+
+    <!-- 主内容 -->
+    <div class="main-content">
+
+        <!-- 欢迎横幅 -->
+        <div class="welcome-banner">
+            <div class="welcome-text">
+                <h2>⚓ 欢迎回来，路景川船长</h2>
+                <p>扁渔巴释海洋运输公司 · 船长</p>
+            </div>
+            <div class="welcome-avatar">🧑‍✈️</div>
+        </div>
+
+        <!-- 个人信息 -->
+        <div class="profile-grid">
+            <div class="profile-card">
+                <div class="card-label">👤 姓名</div>
+                <div class="card-value">路景川</div>
+            </div>
+            <div class="profile-card">
+                <div class="card-label">📋 岗位</div>
+                <div class="card-value">船长 <small>· 远洋航线</small></div>
+            </div>
+            <div class="profile-card">
+                <div class="card-label">🆔 工号</div>
+                <div class="card-value">BYBS-2021-001</div>
+            </div>
+            <div class="profile-card">
+                <div class="card-label">📅 入职日期</div>
+                <div class="card-value">2021-03-01</div>
+            </div>
+        </div>
+
+        <!-- 草稿箱 -->
+        <div class="draft-card">
+            <div class="card-title">
+                📥 草稿箱
+                <span class="badge">2 份</span>
+            </div>
+
+            <!-- 体检报告 -->
+            <div class="draft-item" id="reportItem">
+                <span class="draft-icon">📄</span>
+                <div class="draft-info">
+                    <div class="draft-name">体检报告</div>
+                    <div class="draft-meta">📅 2026-06-11 · 个人档案</div>
+                </div>
+                <span class="draft-arrow">›</span>
+            </div>
+
+            <!-- 心理评估—张子轩（带锁） -->
+            <div class="draft-item locked" id="psychItem">
+                <span class="draft-icon">🔒</span>
+                <div class="draft-info">
+                    <div class="draft-name">心理评估—张子轩</div>
+                    <div class="draft-meta">📅 2026-06-21 · 加密文件</div>
+                </div>
+                <span class="draft-arrow">›</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+        <span>© 2026 扁渔巴释海洋运输公司</span>
+        <span>•</span>
+        <span>⚓ 路景川 · 船长中心</span>
+        <span>•</span>
+        <span>🌊 安全航行 · 责任在肩</span>
+    </div>
+
+    <!-- ====== 体检报告弹窗 ====== -->
+    <div class="report-overlay" id="reportModal">
+        <div class="report-modal">
+            <div class="report-title">📋 体检报告</div>
+            <div class="report-sub">路景川 · 2026年度健康检查</div>
+            <div class="report-body">
+                <div class="field">
+                    <span class="label">👤 姓名</span>
+                    <span class="value">路景川</span>
+                </div>
+                <div class="field">
+                    <span class="label">📅 检查日期</span>
+                    <span class="value">2026-06-11</span>
+                </div>
+                <div class="field">
+                    <span class="label">📋 体检机构</span>
+                    <span class="value">上海远洋医疗中心</span>
+                </div>
+                <div class="field">
+                    <span class="label">❤️ 心率</span>
+                    <span class="value">72 bpm</span>
+                </div>
+                <div class="field">
+                    <span class="label">🩸 血压</span>
+                    <span class="value">128/82 mmHg</span>
+                </div>
+                <div class="field">
+                    <span class="label">📊 视力</span>
+                    <span class="value">左1.2 / 右1.2</span>
+                </div>
+                <div class="field">
+                    <span class="label">⚠️ 过敏史</span>
+                    <span class="value allergy">酒精过敏</span>
+                </div>
+                <div class="field">
+                    <span class="label">📝 备注</span>
+                    <span class="value">建议定期复查，避免饮酒</span>
+                </div>
+            </div>
+            <button class="report-close" onclick="closeReport()">关 闭</button>
+        </div>
+    </div>
+
+    <!-- ====== 密码弹窗 ====== -->
+    <div class="password-overlay" id="passwordModal">
+        <div class="password-modal">
+            <div class="modal-title">🔒 文件已上锁</div>
+            <div class="modal-sub">请输入七位数密码以查看「心理评估—张子轩」</div>
+
+            <div class="form-group">
+                <label for="passwordInput">🔑 密码</label>
+                <input type="password" id="passwordInput" placeholder="请输入七位数密码" autocomplete="off" maxlength="7">
+            </div>
+
+            <div class="error-msg" id="passwordError"></div>
+
+            <div class="form-actions">
+                <button class="btn-confirm" onclick="handlePassword()">确 认</button>
+                <button class="btn-cancel" onclick="closePassword()">取 消</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ---------- 体检报告 ----------
+        function openReport() {
+            document.getElementById('reportModal').classList.add('show');
+        }
+
+        function closeReport() {
+            document.getElementById('reportModal').classList.remove('show');
+        }
+
+        // ---------- 密码弹窗 ----------
+        function openPassword() {
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('passwordError').textContent = '';
+            document.getElementById('passwordModal').classList.add('show');
+            setTimeout(() => document.getElementById('passwordInput').focus(), 100);
+        }
+
+        function closePassword() {
+            document.getElementById('passwordModal').classList.remove('show');
+            document.getElementById('passwordError').textContent = '';
+        }
+
+        // ---------- 密码验证 ----------
+        function handlePassword() {
+            const password = document.getElementById('passwordInput').value.trim();
+            const errorEl = document.getElementById('passwordError');
+
+            errorEl.textContent = '';
+
+            // 验证是否为7位数字
+            if (!/^\d{7}$/.test(password)) {
+                errorEl.textContent = '❌ 请输入7位数字密码';
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+                return;
+            }
+
+            if (password === '6767812') {
+                // 密码正确，跳转到 iamnormal.html
+                closePassword();
+                window.location.href = 'iamnormal.html';
+            } else {
+                errorEl.textContent = '❌ 密码错误，请重新输入';
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+            }
+        }
+
+        // ---------- 点击事件绑定 ----------
+        document.getElementById('reportItem').addEventListener('click', openReport);
+        document.getElementById('psychItem').addEventListener('click', openPassword);
+
+        // 点击背景关闭弹窗
+        document.getElementById('reportModal').addEventListener('click', function(e) {
+            if (e.target === this) closeReport();
+        });
+
+        document.getElementById('passwordModal').addEventListener('click', function(e) {
+            if (e.target === this) closePassword();
+        });
+
+        // 回车键支持
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.getElementById('passwordModal').classList.contains('show')) {
+                e.preventDefault();
+                handlePassword();
+            }
+        });
+
+        // ESC 键关闭
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (document.getElementById('passwordModal').classList.contains('show')) {
+                    closePassword();
+                }
+                if (document.getElementById('reportModal').classList.contains('show')) {
+                    closeReport();
+                }
+            }
+        });
+
+        // ---------- 退出按钮 ----------
+        document.querySelector('.header-actions span:last-child').addEventListener('click', function() {
+            if (confirm('确认退出登录吗？')) {
+                window.location.href = 'linbus2.html';
+            }
+        });
+
+        console.log('lujingchuan.html 已加载 — 船长中心');
+        console.log('📄 体检报告 — 包含「酒精过敏」');
+        console.log('🔒 心理评估—张子轩 — 密码: 6767812 → iamnormal.html');
+    </script>
+
+</body>
+</html>

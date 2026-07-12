@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>张子轩 · 个人空间</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f2f2f2;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px 12px 30px;
+        }
+
+        /* 顶部导航 */
+        .header {
+            width: 100%;
+            max-width: 520px;
+            background: #ffffff;
+            padding: 14px 16px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 16px 16px 0 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .header .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+            text-decoration: none;
+            line-height: 1;
+            padding: 0 4px;
+        }
+        .header .back-btn:active { opacity: 0.5; }
+        .header .title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a1a1a;
+            letter-spacing: 0.5px;
+        }
+        .header .right-placeholder {
+            width: 30px;
+        }
+
+        /* 个人资料卡 */
+        .profile-card {
+            width: 100%;
+            max-width: 520px;
+            background: #ffffff;
+            padding: 20px 16px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #e0e0e0;
+            flex-shrink: 0;
+            background: #e8e8e8;
+        }
+        .profile-info {
+            flex: 1;
+        }
+        .profile-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .profile-bio {
+            font-size: 13px;
+            color: #888;
+            margin-top: 2px;
+        }
+        .profile-stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 4px;
+            font-size: 13px;
+            color: #666;
+        }
+        .profile-stats span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* 动态列表容器 */
+        .feed-container {
+            width: 100%;
+            max-width: 520px;
+            background: #ffffff;
+            border-radius: 0 0 16px 16px;
+            padding: 12px 16px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 单条动态 */
+        .feed-item {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .feed-item:last-child {
+            border-bottom: none;
+        }
+
+        /* 动态头部：头像 + 昵称 + 时间 */
+        .feed-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .feed-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #e8e8e8;
+            flex-shrink: 0;
+            border: 1px solid #e0e0e0;
+        }
+        .feed-user-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .feed-username {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .feed-time {
+            font-size: 12px;
+            color: #999;
+            margin-top: 1px;
+        }
+
+        /* 动态文字内容 */
+        .feed-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #222;
+            padding: 4px 0 8px 0;
+            word-break: break-word;
+        }
+
+        /* 动态图片 */
+        .feed-image {
+            width: 100%;
+            border-radius: 12px;
+            margin: 6px 0 10px 0;
+            max-height: 360px;
+            object-fit: contain;
+            background: #f8f8f8;
+            border: 1px solid #eaeaea;
+        }
+
+        /* 评论区 */
+        .comment-section {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .comment-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 2px 0;
+        }
+        .comment-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #e0e0e0;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: opacity 0.15s;
+            border: 1px solid #e8e8e8;
+        }
+        .comment-avatar:active { opacity: 0.7; }
+        .comment-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f8f8f8;
+            padding: 6px 12px;
+            border-radius: 12px;
+        }
+        .comment-username {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 1px;
+        }
+        .comment-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+            word-break: break-all;
+        }
+        .comment-text .garbled {
+            color: #cc4444;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        /* 特殊评论样式（.sinner） */
+        .comment-item.sinner .comment-body {
+            background: #fff5f0;
+            border: 1px solid #ffd8cc;
+        }
+        .comment-item.sinner .comment-username {
+            color: #cc5533;
+        }
+
+        /* 底部导航占位 */
+        .bottom-nav {
+            width: 100%;
+            max-width: 520px;
+            background: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 16px;
+            border-top: 1px solid #e5e5e5;
+            border-radius: 0 0 16px 16px;
+            margin-top: 0;
+            flex-shrink: 0;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 4px 16px;
+            transition: opacity 0.1s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .nav-item:active { opacity: 0.6; }
+        .nav-icon { font-size: 22px; margin-bottom: 2px; }
+        .nav-text { font-size: 11px; color: #999; font-weight: 500; }
+        .nav-item.active .nav-text { color: #07c160; }
+
+        /* 小屏适配 */
+        @media (max-width: 420px) {
+            .feed-container { padding: 10px 12px 16px; }
+            .feed-text { font-size: 14px; }
+            .feed-image { max-height: 240px; }
+            .profile-avatar { width: 50px; height: 50px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航 -->
+    <div class="header">
+        <a href="qq.html" class="back-btn">‹</a>
+        <span class="title">👤 张子轩的空间</span>
+        <span class="right-placeholder"></span>
+    </div>
+
+    <!-- 个人资料卡 -->
+    <div class="profile-card">
+        <img class="profile-avatar" src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEW_A5qURUKLcrgOeCrsTSyX3yC5aTowQAClC0AAgvDiFaxgZx2Df3upTwE.png" alt="张子轩">
+        <div class="profile-info">
+            <div class="profile-name">张子轩</div>
+            <div class="profile-bio">🌊 即将出海 · 海员预备役</div>
+            <div class="profile-stats">
+                <span>📝 12</span>
+                <span>👥 89</span>
+                <span>❤️ 156</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 动态列表 -->
+    <div class="feed-container" id="feedContainer">
+        <!-- 动态会由 JavaScript 动态生成 -->
+    </div>
+
+    <!-- 底部导航 -->
+    <div class="bottom-nav">
+        <div class="nav-item active">
+            <span class="nav-icon">📱</span>
+            <span class="nav-text">动态</span>
+        </div>
+        <div class="nav-item" onclick="alert('📷 暂无新动态')">
+            <span class="nav-icon">📷</span>
+            <span class="nav-text">相册</span>
+        </div>
+        <div class="nav-item" onclick="alert('💬 消息中心')">
+            <span class="nav-icon">💬</span>
+            <span class="nav-text">留言</span>
+        </div>
+        <div class="nav-item" onclick="alert('👤 个人资料')">
+            <span class="nav-icon">👤</span>
+            <span class="nav-text">我的</span>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- 工具函数 ----------
+            function randomDate(start, end) {
+                const d = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                const hours = String(d.getHours()).padStart(2, '0');
+                const minutes = String(d.getMinutes()).padStart(2, '0');
+                return `${month}-${day} ${hours}:${minutes}`;
+            }
+
+            // 锚点：2026年4月1日 ~ 2026年7月31日
+            const START = new Date(2026, 3, 1);
+            const END = new Date(2026, 6, 31);
+
+            // 随机日常动态文案（张子轩的日常）
+            const randomFeedTexts = [
+                "今天天气真好，去海边走了走。🌊",
+                "新买的航海指南到了，得好好研究一下。📖",
+                "体能训练打卡第30天，继续坚持！💪",
+                "和朋友们聚餐，聊了很多关于未来的计划。🍻",
+                "今天去看了海，心情好多了。🌅",
+                "学习了一天的航海知识，有点累但很充实。📚",
+                "收到了家人寄来的包裹，好温暖。📦",
+                "今天在码头看到一艘大船，好壮观！🚢",
+                "跑步时遇到一只流浪狗，喂了它一些吃的。🐕",
+                "最近在研究星象导航，很有意思。⭐",
+                "整理了一下出海要带的物品清单。📋",
+                "今天天气阴沉，但心情还不错。☁️",
+                "学了一道新菜，味道还可以。🍳",
+                "收到了老同学的消息，好久不见。💬",
+                "今天去图书馆借了几本航海相关的书。📚",
+                "傍晚的晚霞特别美，拍了张照片。🌇",
+                "训练时认识了几个新朋友。🤝",
+                "今天休息，看了部关于海洋的电影。🎬",
+                "距离出海的日子越来越近了，有点紧张又期待。⛵",
+                "记录一下今天的心情，一切都在变好。✍️"
+            ];
+
+            // 随机图片（AI生成风格，使用占位图服务）
+            const randomImages = [
+                'https://picsum.photos/seed/zhang1/400/300',
+                'https://picsum.photos/seed/zhang2/400/300',
+                'https://picsum.photos/seed/zhang3/400/300',
+                'https://picsum.photos/seed/zhang4/400/300',
+                'https://picsum.photos/seed/zhang5/400/300',
+                'https://picsum.photos/seed/zhang6/400/300',
+                'https://picsum.photos/seed/zhang7/400/300',
+                'https://picsum.photos/seed/zhang8/400/300'
+            ];
+
+            // 张子轩的固定头像
+            const ZHANG_AVATAR = 'https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEW_A5qURUKLcrgOeCrsTSyX3yC5aTowQAClC0AAgvDiFaxgZx2Df3upTwE.png';
+
+            // .sinner 的头像
+            const SINNER_AVATAR = 'https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEW_WRqUUYnETMRAAHJJ9QZ7FC_UHsIoIkAAg8vAAILw4hWaSBW0drSGjo8BA.jpg';
+
+            // ---------- 生成动态数据 ----------
+            function generateFeeds() {
+                const feeds = [];
+                const feedCount = 4 + Math.floor(Math.random() * 3); // 4~6条
+
+                // 张子轩的固定动态（带图片和特殊评论）
+                const zhangFeed = {
+                    id: 'zhang',
+                    username: '张子轩',
+                    avatar: ZHANG_AVATAR,
+                    text: '终于拿到海员证了！接下来就可以去海上工作了！⚓🚢',
+                    time: randomDate(START, END),
+                    image: 'https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEXCoBqUrXkFllPMbhoT80HAAHJziOxSn8AAjQmAAJ2zJhWJU9rHnUbQ_g8BA.png',
+                    comments: [
+                        {
+                            username: '多分、風。',
+                            avatar: 'https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEW_AZqURPtTNSTkGcfcHzIn1qZTS6CqQAChy0AAgvDiFbDXblDMtey2DwE.jpg',
+                            text: '恭喜恭喜！海上工作要注意安全啊！💪'
+                        },
+                        {
+                            username: '李雪峰',
+                            avatar: 'https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEW_BpqURZeJfGXlltzk_TCEk3pyC4JGAACoC0AAgvDiFb0_r5KmjclcjwE.jpg',
+                            text: '厉害了兄弟！记得多拍点海上的照片！📸'
+                        },
+                        {
+                          
+                        }
+                    ]
+                };
+                feeds.push(zhangFeed);
+
+                // 生成其他随机动态（都是张子轩的日常）
+                const usedTexts = new Set();
+                usedTexts.add(zhangFeed.text);
+
+                for (let i = 0; i < feedCount; i++) {
+                    let text;
+                    let attempts = 0;
+                    do {
+                        text = randomFeedTexts[Math.floor(Math.random() * randomFeedTexts.length)];
+                        attempts++;
+                    } while (usedTexts.has(text) && attempts < 20);
+                    usedTexts.add(text);
+
+                    const hasImage = Math.random() > 0.4;
+                    const image = hasImage ? randomImages[Math.floor(Math.random() * randomImages.length)] : null;
+
+                    // 随机生成0~2条评论
+                    const commentCount = Math.floor(Math.random() * 3);
+                    const comments = [];
+                    const commentUsers = [
+                        { name: '多分、風。', avatar: 'https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEW_AZqURPtTNSTkGcfcHzIn1qZTS6CqQAChy0AAgvDiFbDXblDMtey2DwE.jpg' },
+                        { name: '李雪峰', avatar: 'https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEW_BpqURZeJfGXlltzk_TCEk3pyC4JGAACoC0AAgvDiFb0_r5KmjclcjwE.jpg' },
+                        { name: '托尔芬本人', avatar: 'https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEW_CNqURdgsV0a9Vowzn7W2Q_RrwmZgQACqy0AAgvDiFaEi3DjjL7g8zwE.jpg' },
+                        { name: '小乐', avatar: 'https://i.pravatar.cc/100?img=1' },
+                        { name: '阿星', avatar: 'https://i.pravatar.cc/100?img=2' },
+                        { name: '晴天', avatar: 'https://i.pravatar.cc/100?img=3' }
+                    ];
+
+                    for (let j = 0; j < commentCount; j++) {
+                        const user = commentUsers[Math.floor(Math.random() * commentUsers.length)];
+                        const commentTexts = [
+                            '哇，太棒了吧！👍',
+                            '厉害啊！继续加油！💪',
+                            '我也好想试试！😍',
+                            '这是什么神仙操作！🤩',
+                            '羡慕了羡慕了！✨',
+                            '有机会带我一个呗！🙋',
+                            '真的假的？太牛了！🔥',
+                            '我也想学！求带！📚',
+                            '哈哈哈太有趣了！😂',
+                            '好厉害呀！向你学习！🌟'
+                        ];
+                        comments.push({
+                            username: user.name,
+                            avatar: user.avatar,
+                            text: commentTexts[Math.floor(Math.random() * commentTexts.length)]
+                        });
+                    }
+
+                    feeds.push({
+                        id: 'feed_' + i,
+                        username: '张子轩',
+                        avatar: ZHANG_AVATAR,
+                        text: text,
+                        time: randomDate(START, END),
+                        image: image,
+                        comments: comments
+                    });
+                }
+
+                // 打乱顺序，但保证张子轩的固定动态在第一条
+                const otherFeeds = feeds.slice(1);
+                for (let i = otherFeeds.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [otherFeeds[i], otherFeeds[j]] = [otherFeeds[j], otherFeeds[i]];
+                }
+                return [zhangFeed, ...otherFeeds];
+            }
+
+            // ---------- 渲染动态 ----------
+            function renderFeeds() {
+                const container = document.getElementById('feedContainer');
+                container.innerHTML = '';
+                const feeds = generateFeeds();
+
+                feeds.forEach(feed => {
+                    const feedDiv = document.createElement('div');
+                    feedDiv.className = 'feed-item';
+
+                    // 头部
+                    const header = document.createElement('div');
+                    header.className = 'feed-header';
+                    header.innerHTML = `
+                        <img class="feed-avatar" src="${feed.avatar}" alt="${feed.username}">
+                        <div class="feed-user-info">
+                            <span class="feed-username">${feed.username}</span>
+                            <span class="feed-time">${feed.time}</span>
+                        </div>
+                    `;
+                    feedDiv.appendChild(header);
+
+                    // 文字
+                    const textDiv = document.createElement('div');
+                    textDiv.className = 'feed-text';
+                    textDiv.textContent = feed.text;
+                    feedDiv.appendChild(textDiv);
+
+                    // 图片（如果有）
+                    if (feed.image) {
+                        const img = document.createElement('img');
+                        img.className = 'feed-image';
+                        img.src = feed.image;
+                        img.alt = '动态配图';
+                        img.loading = 'lazy';
+                        feedDiv.appendChild(img);
+                    }
+
+                    // 评论区
+                    if (feed.comments && feed.comments.length > 0) {
+                        const commentSection = document.createElement('div');
+                        commentSection.className = 'comment-section';
+
+                        feed.comments.forEach(comment => {
+                            const commentItem = document.createElement('div');
+                            commentItem.className = 'comment-item';
+                            if (comment.isSinner) {
+                                commentItem.classList.add('sinner');
+                            }
+
+                            // 头像（可点击）
+                            const avatarImg = document.createElement('img');
+                            avatarImg.className = 'comment-avatar';
+                            avatarImg.src = comment.avatar;
+                            avatarImg.alt = comment.username;
+                            avatarImg.dataset.user = comment.username;
+
+                            // 如果是 .sinner，点击头像跳转到 qq5.html
+                            if (comment.isSinner) {
+                                avatarImg.style.cursor = 'pointer';
+                                avatarImg.addEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    window.location.href = 'qq5.html';
+                                });
+                            } else {
+                                avatarImg.addEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    alert(`👤 ${comment.username} 的个人主页`);
+                                });
+                            }
+
+                            const bodyDiv = document.createElement('div');
+                            bodyDiv.className = 'comment-body';
+                            const nameSpan = document.createElement('div');
+                            nameSpan.className = 'comment-username';
+                            nameSpan.textContent = comment.username;
+                            const textSpan = document.createElement('div');
+                            textSpan.className = 'comment-text';
+                            if (comment.isSinner) {
+                                textSpan.innerHTML = `<span class="garbled">${comment.text}</span>`;
+                            } else {
+                                textSpan.textContent = comment.text;
+                            }
+
+                            bodyDiv.appendChild(nameSpan);
+                            bodyDiv.appendChild(textSpan);
+
+                            commentItem.appendChild(avatarImg);
+                            commentItem.appendChild(bodyDiv);
+                            commentSection.appendChild(commentItem);
+                        });
+
+                        feedDiv.appendChild(commentSection);
+                    }
+
+                    container.appendChild(feedDiv);
+                });
+            }
+
+            // ---------- 初始化 ----------
+            renderFeeds();
+
+            console.log('qq4.html 已加载 — 张子轩的个人空间');
+            console.log('💡 点击 .sinner 的头像可跳转到 qq5.html');
+        })();
+    </script>
+
+</body>
+</html>

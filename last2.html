@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>最后的对话 · 失控</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            overflow: hidden;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* ---------- 文字区域 ---------- */
+        .text-area {
+            width: 100%;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .line {
+            font-size: 20px;
+            line-height: 1.7;
+            letter-spacing: 0.5px;
+            opacity: 0;
+            transform: translateY(12px);
+            animation: fadeIn 0.6s ease forwards;
+            padding: 4px 0;
+        }
+
+        .line.delay-1 { animation-delay: 0.1s; }
+        .line.delay-2 { animation-delay: 0.2s; }
+        .line.delay-3 { animation-delay: 0.3s; }
+        .line.delay-4 { animation-delay: 0.4s; }
+        .line.delay-5 { animation-delay: 0.5s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .line.red {
+            color: #cc0000;
+        }
+
+        .line.white {
+            color: #ffffff;
+        }
+
+        /* ---------- 选项区域 ---------- */
+        .options-area {
+            width: 100%;
+            max-width: 400px;
+            margin-top: 28px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .options-area.show {
+            display: flex;
+        }
+
+        .options-area .options-title {
+            color: #888888;
+            font-size: 15px;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .options-area .option-group {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .option-btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 14px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            font-size: 17px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.25s, transform 0.15s, border-color 0.25s, box-shadow 0.25s;
+            text-align: center;
+            letter-spacing: 1px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .option-btn:active {
+            transform: scale(0.95);
+        }
+
+        .option-btn.red-option {
+            color: #cc0000;
+            border-color: rgba(200, 0, 0, 0.2);
+        }
+
+        .option-btn.red-option:hover {
+            background: rgba(200, 0, 0, 0.08);
+            border-color: rgba(200, 0, 0, 0.3);
+            box-shadow: 0 0 30px rgba(200, 0, 0, 0.05);
+        }
+
+        .option-btn.white-option {
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .option-btn.white-option:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.02);
+        }
+
+        /* ---------- 点击提示 ---------- */
+        .click-hint {
+            color: #333333;
+            font-size: 13px;
+            letter-spacing: 2px;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeIn 0.6s ease 0.8s forwards;
+            transition: opacity 0.3s ease;
+        }
+
+        .click-hint.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* ---------- 小屏适配 ---------- */
+        @media (max-width: 480px) {
+            .line {
+                font-size: 17px;
+            }
+            .option-btn {
+                font-size: 15px;
+                padding: 12px 20px;
+                min-width: 110px;
+            }
+            .options-area .options-title {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainContainer">
+        <!-- 文字区域 -->
+        <div class="text-area" id="textArea">
+            <!-- 由 JavaScript 动态渲染 -->
+        </div>
+
+        <!-- 选项区域 -->
+        <div class="options-area" id="optionsArea">
+            <div class="options-title">— 你的回答是？ —</div>
+            <div class="option-group">
+                <button class="option-btn red-option" id="optionRed">你个杀人犯......</button>
+                <button class="option-btn white-option" id="optionWhite">好</button>
+            </div>
+        </div>
+
+        <!-- 点击提示 -->
+        <div class="click-hint" id="clickHint">🖱 点击屏幕继续 · · ·</div>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ---------- 对话台词 ----------
+            // 每项: { text, className }
+            const lines = [
+                { text: '你填写了名字，随后......屏幕那边沉默了一会，', class: 'white' },
+                { text: '“为什么你们每个人都要这样对我......？”', class: 'red' },
+                { text: '为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么为什么', class: 'red' },
+                { text: '“冷静......我得冷静......我完全可以控制自己的情绪，就像以前一样。”', class: 'white' },
+                { text: '“没关系，人非圣贤，孰能无过。我愿意再给你一个机会，我等一下会准备一顿很丰盛的晚餐，即使你无法和我在餐桌上用餐，至少也接受我这个提议......算我求你了，好吗？”', class: 'white' }
+            ];
+
+            let currentLineIndex = 0;
+            let isCompleted = false;
+            let isOptionsVisible = false;
+
+            const textArea = document.getElementById('textArea');
+            const clickHint = document.getElementById('clickHint');
+            const mainContainer = document.getElementById('mainContainer');
+            const optionsArea = document.getElementById('optionsArea');
+            const optionRed = document.getElementById('optionRed');
+            const optionWhite = document.getElementById('optionWhite');
+
+            // ---------- 渲染下一段文字 ----------
+            function renderNextLine() {
+                if (isCompleted || isOptionsVisible) return;
+
+                if (currentLineIndex < lines.length) {
+                    const lineData = lines[currentLineIndex];
+                    const lineDiv = document.createElement('div');
+                    lineDiv.className = 'line ' + lineData.class + ' delay-' + ((currentLineIndex % 5) + 1);
+                    lineDiv.textContent = lineData.text;
+                    textArea.appendChild(lineDiv);
+
+                    currentLineIndex++;
+
+                    // 所有台词显示完毕 → 显示选项
+                    if (currentLineIndex >= lines.length) {
+                        isCompleted = true;
+                        // 延迟显示选项
+                        setTimeout(() => {
+                            showOptions();
+                        }, 700);
+                    }
+                }
+            }
+
+            // ---------- 显示选项 ----------
+            function showOptions() {
+                isOptionsVisible = true;
+                clickHint.classList.add('hidden');
+                optionsArea.classList.add('show');
+            }
+
+            // ---------- 选项处理 ----------
+            optionRed.addEventListener('click', function(e) {
+                e.stopPropagation();
+                console.log('🔴 选择: 你个杀人犯...... → Real.html');
+                window.location.href = 'Real.html';
+            });
+
+            optionWhite.addEventListener('click', function(e) {
+                e.stopPropagation();
+                console.log('⚪ 选择: 好 → meat.html');
+                window.location.href = 'meat.html';
+            });
+
+            // ---------- 点击事件 ----------
+            mainContainer.addEventListener('click', function(e) {
+                // 如果点击的是选项按钮，不触发推进
+                if (e.target === optionRed || e.target === optionWhite) return;
+                if (isOptionsVisible) return;
+                renderNextLine();
+            });
+
+            // 阻止选项按钮冒泡
+            optionRed.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            optionWhite.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            // ---------- 自动显示第一句 ----------
+            setTimeout(() => {
+                renderNextLine();
+            }, 400);
+
+            console.log('last2.html 已加载 — 最后的对话 · 失控');
+            console.log('💡 点击屏幕推进对话');
+            console.log('🔴 红色选项 → Real.html');
+            console.log('⚪ 白色选项 → meat.html');
+
+        })();
+    </script>
+
+</body>
+</html>

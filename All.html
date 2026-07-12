@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>真相 · 航行日志</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            padding: 30px 20px 50px;
+        }
+
+        .container {
+            max-width: 780px;
+            width: 100%;
+            background: #ffffff;
+            padding: 20px 24px 40px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.02);
+        }
+
+        /* ---------- 标题 ---------- */
+        .doc-header {
+            text-align: center;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 22px;
+        }
+
+        .doc-header .doc-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: 2px;
+        }
+
+        .doc-header .doc-sub {
+            font-size: 14px;
+            color: #888888;
+            margin-top: 4px;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        /* ---------- 文本内容 ---------- */
+        .content {
+            font-size: 16px;
+            line-height: 1.9;
+            color: #1a1a1a;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .content .time-mark {
+            color: #666666;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .content .dialogue {
+            color: #1a1a1a;
+        }
+
+        .content .dialogue .speaker {
+            font-weight: 600;
+        }
+
+        .content .divider {
+            text-align: center;
+            color: #cccccc;
+            font-size: 18px;
+            letter-spacing: 6px;
+            padding: 6px 0;
+            user-select: none;
+        }
+
+        .content .italic {
+            font-style: italic;
+            color: #444444;
+        }
+
+        .content .ending {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-top: 8px;
+            letter-spacing: 4px;
+        }
+
+        /* ---------- 重新来过按钮 ---------- */
+        .back-area {
+            margin-top: 30px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .restart-btn {
+            padding: 10px 32px;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 30px;
+            color: #444444;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s, border-color 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            letter-spacing: 1px;
+        }
+
+        .restart-btn:hover {
+            background: #eeeeee;
+            border-color: #cccccc;
+        }
+
+        .restart-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ---------- 小屏适配 ---------- */
+        @media (max-width: 480px) {
+            .container {
+                padding: 16px 14px 30px;
+            }
+            .doc-header .doc-title {
+                font-size: 19px;
+            }
+            .content {
+                font-size: 15px;
+                line-height: 1.8;
+            }
+            .content .ending {
+                font-size: 16px;
+            }
+            .restart-btn {
+                font-size: 13px;
+                padding: 8px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 文档头部 -->
+        <div class="doc-header">
+            <div class="doc-title">📄 航行日志 · 真相</div>
+            <div class="doc-sub">— 扁渔巴释号 · 海难记录 —</div>
+        </div>
+
+        <!-- 正文 -->
+        <div class="content">
+航行开始一个月后......我们遭遇了海难，海难把大部分的物资都给带走了，并且船也遭到了损坏，卫星电话也被卷走了......就连原本的15人，也被直接带走了8人
+
+此刻时间，海难发生三天后，下午16:41，船舱内
+
+船上的氛围明显不怎么好，张子轩低着头，整个人完全缩在阴影内，不知道在想什么，而李星林和李雪峰以及黄博浩则是也都各自散开......
+
+随后，陈子华开口了：“我说......哥几个，现在该怎么办？人死了八个，货物也没了一大堆。”
+
+“至少我们七个现在还活着......人生在世，本来就是如此，你永远不知道明天和意外哪个先来。”，李星林这样说着，可他的脸上看不出一丝一毫的释怀
+
+黄博浩则是苦笑着表示：“哈......听着舒服啊，可我没有你这么容易看开，我还是想活下去......”
+
+而后，又是一阵沉默，随后，陈子华看向了李雪峰和张子轩：“嘿！那边那两个小年轻，别什么也不说啊，至少也说几句吧......”
+
+“虽然我知道现在的状况确实也不怎么好......”，他低声这样自言自语说着
+
+李雪峰抬起头来，扫视了一圈周围，随后看向了刚刚说话的陈子华：“啊......我不知道说什么......我只是想活着回家而已。”
+
+“谁不想呢？卫星电话也没了，现在离靠岸还有很久......”
+
+只不过，陈子华刚想继续说话，便被从船长室里走出来的陈梓华打断了：“你能把你的那张嘴闭上吗？你是巴不得我们快点死在这里？”
+
+随后，陈梓华冷静了一下：“我的意思是，我不想听到你说那些丧气话，好吗？”
+
+“......我只是下意识说了那些话，别在意。”
+
+船上又回归了寂静，只能听到船外海水的声音，也许是太过压抑，又或是陈梓华想询问这个年轻的船员他的感受
+
+“张子轩，你就没什么想说的吗？你知道的......现在这个状况......”
+
+“我没什么好说的......我想活下去。”，话没说完，陈梓华便被张子轩打断了，不过，这也确实在他的预料之中，毕竟，任谁来也开心不起来啊。
+
+时间流逝
+
+此刻时间，海难发生一个月后，晚上18：31，餐厅
+
+“所以，我们现在的食物只剩下一点点了？”路景川低沉的声音传出，询问着黄博浩
+
+“......”，“别像个胆小鬼一样磨磨唧唧”，而在听到路景川的话后，黄博浩才开了口：“对”
+
+随后，餐厅内变的无比寂静，一时间，没有任何一个人说话
+
+但最终，众人还是吃完了晚饭......
+
+晚饭后，晚上22:31
+
+张子轩坐在卧室内，此刻，他又开始耳鸣了......
+
+并且，耳鸣症状越来越严重了。
+
+不止是耳鸣，还有那令人讨厌的幻觉，和愈发沉重的饥饿感......
+
+随后，他强迫自己入睡，也许，一觉醒来，这场“不愉快的经历”就会结束。
+
+时间再次流逝
+
+此刻时间，一周后，下午19:34
+
+“食物已经吃完了。”路景川这样说着，他的脸上还是没什么表情变化，但他叼着的烟已经不见了，看起来，他已经抽光了烟
+
+“接下来，就听天由命吧，我还会继续完成作为船长的工作......”
+
+“直到我死在这艘船上的时候。”
+
+随后，路景川回头走出了餐厅，他要继续工作了。
+
+其他人坐在椅子上，随后也纷纷离开了餐厅。
+
+晚饭后，晚上23:31
+
+张子轩躺在床上，但他的眼睛死死的盯着天花板，在无比寂静的房间内，他可以清楚的听到他自己的心跳声
+
+而那该死的耳鸣还萦绕在他的耳旁，他感觉越来越饿......越来越饿......越来越饿......
+
+随后，张子轩站起身，无声的打开了房门，走出了宿舍......
+
+但他的手已经不抖了......
+
+“请你忍耐。”
+
+三天后，船上除了张子轩外，还剩路景川，李雪峰，陈梓华三人
+
+而陈子华，李星林，黄博浩，则是已经被张子轩杀死了......
+
+此刻，船上，路景川和陈梓华两人完全将自己锁在船长室内，而此刻，餐厅内，张子轩熟练的处理着“肉类”，被张子轩叫过来等待晚餐的李雪峰则是直接吐了
+
+“呕......”
+
+只不过，张子轩并没有看他，而是继续的处理着食材，随后表示：“没关系的......雪峰，我只是做了'正当防卫'而已......如果不是那三个人想要杀掉我！也不会发生这一切的......”
+
+随后，张子轩继续处理着食材：“你肯定可以理解我的，对吧？如果你是我，你肯定也会做出跟我一样的选择的！对不对？”
+
+“算了，我们别谈这些事情了，晚饭很快就好了......”
+
+而后，李雪峰则是平复自己的心情，随后表示：“我......我不怎么饿，我今天有点累了，我先休息了......”
+
+“好吧。”
+
+回到宿舍后，李雪峰回想着那日的场景......便又忍不住的犯恶心，他知道，张子轩已经彻底疯了，明明是他趁着深夜，去到陈子华的房间内，用消防斧将他杀死
+
+而李星林和黄博浩则是因为宿舍离得近，听到动静赶过去查看时，便被张子轩也顺手给杀掉了......
+
+“必须把张子轩给......”
+
+当晚深夜，凌晨00:45
+
+此刻，两个人偷偷走到了张子轩的房门前，随后，悄无声息的打开了房门，而后，两人便疯狂朝床上捅去
+
+仔细一看，是李雪峰和陈梓华，原来，两人合作了，准备一同除掉这个疯子
+
+只不过，预想中的手感没有传来，随后陈梓华的头便被斧头狠狠的劈中
+
+“噗呲”，随后，一种不明的液体便溅满了李雪峰的整个脸庞......
+
+“呕.......！”
+
+而李雪峰在察觉到这是什么后，便立马双腿一软，跪倒在了地上，开始呕吐起来......
+
+随后，张子轩则是提起了李雪峰，走出了宿舍，来到了甲板上。
+
+“为什么连你也要背叛我呢......我只是想活下去而已！我以为你可以理解我的......”
+
+“我明白了......是陈梓华教唆你的，对吗？是那个疯子，他想借你的手杀掉我！这一切都是个圈套，我们都被下套了！”
+
+“没关系！我的朋友。现在那个该死的骗子已经死了！这只是'正当防卫'而已，你能理解我的，对吧？”
+
+张子轩一脸期待的看着李雪峰，他的表情就像是一个考了高分，等待家长表扬的小孩子一样......
+
+“你个杀人犯......”
+
+“噢......”
+
+“噗呲”
+
+   完
+        </div>
+
+        <!-- 重新来过按钮 -->
+        <div class="back-area">
+            <a href="index.html" class="restart-btn">🔄 重新来过</a>
+        </div>
+    </div>
+
+    <script>
+        console.log('All.html 已加载 — 航行日志 · 真相');
+        console.log('📄 完整记录了海难后的生存与疯狂');
+        console.log('🔄 点击 "重新来过" 返回 index.html');
+    </script>
+
+</body>
+</html>

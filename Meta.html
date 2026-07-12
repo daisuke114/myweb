@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>结局 ? · 你做出了选择。</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            overflow: hidden;
+            cursor: default;
+            user-select: none;
+        }
+
+        .container {
+            max-width: 620px;
+            width: 100%;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* ---------- 文字区域 ---------- */
+        .text-area {
+            width: 100%;
+            text-align: center;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .line {
+            color: #e8e0d8;
+            font-size: 19px;
+            line-height: 1.8;
+            letter-spacing: 0.5px;
+            opacity: 0;
+            transform: translateY(12px);
+            animation: fadeIn 1.0s ease forwards;
+            padding: 4px 0;
+        }
+
+        /* 延迟时间拉长，速度降低 */
+        .line.delay-1 { animation-delay: 0.4s; }
+        .line.delay-2 { animation-delay: 1.2s; }
+        .line.delay-3 { animation-delay: 2.0s; }
+        .line.delay-4 { animation-delay: 2.8s; }
+        .line.delay-5 { animation-delay: 3.6s; }
+        .line.delay-6 { animation-delay: 4.4s; }
+        .line.delay-7 { animation-delay: 5.2s; }
+        .line.delay-8 { animation-delay: 6.0s; }
+        .line.delay-9 { animation-delay: 6.8s; }
+        .line.delay-10 { animation-delay: 7.8s; }
+        .line.delay-11 { animation-delay: 8.8s; }
+        .line.delay-12 { animation-delay: 9.8s; }
+        .line.delay-13 { animation-delay: 11.0s; }
+        .line.delay-14 { animation-delay: 12.4s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .line .highlight {
+            color: #cc8844;
+            font-weight: 500;
+        }
+
+        .line .scream {
+            color: #cc3333;
+            font-weight: 700;
+            font-size: 21px;
+        }
+
+        .line .plead {
+            color: #aa8866;
+            font-style: italic;
+        }
+
+        .line .gunshot {
+            color: #ff4444;
+            font-weight: 900;
+            font-size: 26px;
+            letter-spacing: 6px;
+        }
+
+        .line .final {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 22px;
+            letter-spacing: 2px;
+        }
+
+        .line .fade-text {
+            color: #777777;
+            font-size: 17px;
+            font-style: italic;
+        }
+
+        /* ---------- 结局标题 ---------- */
+        .ending-title {
+            margin-top: 32px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(16px);
+            animation: fadeIn 1.2s ease 14.0s forwards;
+        }
+
+        .ending-title .ex {
+            font-size: 24px;
+            font-weight: 700;
+            color: #cc8844;
+            letter-spacing: 4px;
+            text-shadow: 0 0 40px rgba(200, 136, 68, 0.05);
+        }
+
+        .ending-title .ex-sub {
+            font-size: 17px;
+            color: #887766;
+            margin-top: 8px;
+            letter-spacing: 3px;
+            font-weight: 300;
+        }
+
+        .ending-title .ex-desc {
+            font-size: 14px;
+            color: #665544;
+            margin-top: 10px;
+            letter-spacing: 2px;
+            font-weight: 300;
+            font-style: italic;
+        }
+
+        /* ---------- 重新开始 ---------- */
+        .restart-area {
+            margin-top: 30px;
+            opacity: 0;
+            transform: translateY(16px);
+            animation: fadeIn 0.8s ease 15.2s forwards;
+        }
+
+        .restart-btn {
+            padding: 12px 36px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(200, 160, 120, 0.1);
+            border-radius: 30px;
+            color: #887a6a;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.25s, transform 0.15s, border-color 0.25s, color 0.25s;
+            text-decoration: none;
+            display: inline-block;
+            letter-spacing: 1px;
+        }
+
+        .restart-btn:hover {
+            background: rgba(200, 160, 120, 0.04);
+            border-color: rgba(200, 160, 120, 0.2);
+            color: #b0a090;
+        }
+
+        .restart-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ---------- 小屏适配 ---------- */
+        @media (max-width: 480px) {
+            .line {
+                font-size: 16px;
+            }
+            .line .scream {
+                font-size: 18px;
+            }
+            .line .gunshot {
+                font-size: 22px;
+            }
+            .line .final {
+                font-size: 18px;
+            }
+            .ending-title .ex {
+                font-size: 20px;
+            }
+            .ending-title .ex-sub {
+                font-size: 15px;
+            }
+            .restart-btn {
+                font-size: 13px;
+                padding: 10px 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 文字区域 -->
+        <div class="text-area">
+            <div class="line delay-1">最终，你再次见到了张子轩，</div>
+            <div class="line delay-2">只不过，此刻，你并不只是一个“观众”了。</div>
+            <div class="line delay-3">随后，一声枪响传出，</div>
+            <div class="line delay-4">你打中了他的大腿，</div>
+            <div class="line delay-5">他便瞬间倒在了地上，发出了惨叫：</div>
+            <div class="line delay-6 scream">“哇呀————！”</div>
+            <div class="line delay-7 plead">“呜呜呜......好痛.......好他妈的痛呀！”</div>
+            <div class="line delay-8" style="color:#aa8866;">张子轩居然痛得哭了起来。</div>
+            <div class="line delay-9 plead">“不要杀我，求你了。”</div>
+            <div class="line delay-10 plead">“你想让我叫你爸爸吗？或者妈妈也行！爷爷！奶奶！求你了......不要杀我”</div>
+            <div class="line delay-11 plead">“你想让我跪下磕头吗？我可以！还是你想让我吃你大便？或者让我给你当狗？不管怎么样，什么都可以！”</div>
+            <div class="line delay-12 plead">“求你了......只要别杀我......”</div>
+            <div class="line delay-13 gunshot">“砰”</div>
+            <div class="line delay-14 final">—— 你做出了选择。——</div>
+        </div>
+
+        <!-- 结局标题 -->
+        <div class="ending-title">
+            <div class="ex">✦ 结局 ? ✦</div>
+            <div class="ex-sub">“你做出了选择。”</div>
+            <div class="ex-desc">— 枪响之后 · 再无观众 —</div>
+        </div>
+
+        <!-- 重新开始 -->
+        <div class="restart-area">
+            <a href="First.html" class="restart-btn">🔄 重新来过</a>
+        </div>
+    </div>
+
+    <script>
+        console.log('Meta.html 已加载 — 结局 ? "你做出了选择。"');
+        console.log('你朝张子轩的大腿开了一枪...');
+        console.log('💀 他哭着求饶，但你最终还是扣下了扳机。');
+        console.log('⏳ 文字出现速度已降低，营造沉浸感。');
+    </script>
+
+</body>
+</html>

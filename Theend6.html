@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>结局 2 · 包装纸</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            overflow: hidden;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.8s ease;
+        }
+
+        body.blackout {
+            background: #000000;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* ---------- 文字区域 ---------- */
+        .text-area {
+            width: 100%;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .line {
+            color: #ffffff;
+            font-size: 20px;
+            line-height: 1.7;
+            letter-spacing: 0.5px;
+            opacity: 0;
+            transform: translateY(12px);
+            animation: fadeIn 0.6s ease forwards;
+            padding: 4px 0;
+        }
+
+        .line.delay-1 { animation-delay: 0.1s; }
+        .line.delay-2 { animation-delay: 0.2s; }
+        .line.delay-3 { animation-delay: 0.3s; }
+        .line.delay-4 { animation-delay: 0.4s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---------- 结局标题（最后显示） ---------- */
+        .ending-title {
+            margin-top: 30px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .ending-title.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .ending-title .ex {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 3px;
+        }
+
+        .ending-title .ex-sub {
+            font-size: 16px;
+            color: #888888;
+            margin-top: 8px;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        .ending-title .ex-desc {
+            font-size: 14px;
+            color: #555555;
+            margin-top: 12px;
+            letter-spacing: 2px;
+            font-weight: 300;
+            font-style: italic;
+        }
+
+        /* ---------- 点击提示 ---------- */
+        .click-hint {
+            color: #333333;
+            font-size: 13px;
+            letter-spacing: 2px;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeIn 0.6s ease 0.8s forwards;
+            transition: opacity 0.4s ease;
+        }
+
+        .click-hint.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* ---------- 重新开始按钮（黑屏后显示） ---------- */
+        .restart-area {
+            margin-top: 30px;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            pointer-events: none;
+        }
+
+        .restart-area.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .restart-btn {
+            padding: 12px 36px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            color: #888888;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.25s, transform 0.15s, border-color 0.25s;
+            text-decoration: none;
+            display: inline-block;
+            letter-spacing: 1px;
+        }
+
+        .restart-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #aaaaaa;
+        }
+
+        .restart-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ---------- 小屏适配 ---------- */
+        @media (max-width: 480px) {
+            .line {
+                font-size: 17px;
+            }
+            .ending-title .ex {
+                font-size: 18px;
+            }
+            .ending-title .ex-sub {
+                font-size: 14px;
+            }
+            .restart-btn {
+                font-size: 13px;
+                padding: 10px 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainContainer">
+        <!-- 文字区域 -->
+        <div class="text-area" id="textArea">
+            <!-- 由 JavaScript 动态渲染 -->
+        </div>
+
+        <!-- 结局标题 -->
+        <div class="ending-title" id="endingTitle">
+            <div class="ex">✦ 结局 2 ✦</div>
+            <div class="ex-sub">“你通关了这个游戏！但包装纸真的撕开了吗？”</div>
+            <div class="ex-desc">— 沉默 · 责任 · 未解的谜 —</div>
+        </div>
+
+        <!-- 重新开始 -->
+        <div class="restart-area" id="restartArea">
+            <a href="index.html" class="restart-btn">🔄 重新来过</a>
+        </div>
+
+        <!-- 点击提示 -->
+        <div class="click-hint" id="clickHint">🖱 点击屏幕继续 · · ·</div>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ---------- 对话台词 ----------
+            const lines = [
+                '你填写了名字，随后......屏幕那边沉默了一会，',
+                '“太好了，你完全明白我的意思......感谢你。”',
+                '“接下来的事情，就交给我来处理吧......我会承担起责任的。”'
+            ];
+
+            let currentLineIndex = 0;
+            let isCompleted = false;
+            let isBlackout = false;
+
+            const textArea = document.getElementById('textArea');
+            const clickHint = document.getElementById('clickHint');
+            const mainContainer = document.getElementById('mainContainer');
+            const endingTitle = document.getElementById('endingTitle');
+            const restartArea = document.getElementById('restartArea');
+
+            // ---------- 渲染下一段文字 ----------
+            function renderNextLine() {
+                if (isCompleted) return;
+
+                if (currentLineIndex < lines.length) {
+                    const lineText = lines[currentLineIndex];
+                    const lineDiv = document.createElement('div');
+                    lineDiv.className = 'line delay-' + ((currentLineIndex % 3) + 1);
+                    lineDiv.textContent = lineText;
+                    textArea.appendChild(lineDiv);
+
+                    currentLineIndex++;
+
+                    // 所有台词显示完毕 → 黑屏 + 显示结局
+                    if (currentLineIndex >= lines.length) {
+                        isCompleted = true;
+                        clickHint.classList.add('hidden');
+
+                        // 延迟后黑屏
+                        setTimeout(() => {
+                            enterBlackout();
+                        }, 1200);
+                    }
+                }
+            }
+
+            // ---------- 进入黑屏 ----------
+            function enterBlackout() {
+                isBlackout = true;
+
+                // 1. 清除所有文字（淡出）
+                const allLines = textArea.querySelectorAll('.line');
+                allLines.forEach((line, index) => {
+                    setTimeout(() => {
+                        line.style.transition = 'opacity 0.6s ease';
+                        line.style.opacity = '0';
+                    }, index * 150);
+                });
+
+                // 2. 等待文字消失后，彻底黑屏并显示结局
+                setTimeout(() => {
+                    // 彻底清空文字区域
+                    textArea.innerHTML = '';
+
+                    // 显示结局标题
+                    endingTitle.classList.add('show');
+
+                    // 延迟显示重新开始按钮
+                    setTimeout(() => {
+                        restartArea.classList.add('show');
+                    }, 600);
+
+                    // 隐藏点击提示
+                    clickHint.classList.add('hidden');
+
+                    console.log('💀 结局 2 已达成 — 包装纸真的撕开了吗？');
+
+                }, 1000);
+            }
+
+            // ---------- 点击事件 ----------
+            mainContainer.addEventListener('click', function(e) {
+                if (isCompleted) return;
+                if (isBlackout) return;
+                renderNextLine();
+            });
+
+            // ---------- 自动显示第一句 ----------
+            setTimeout(() => {
+                renderNextLine();
+            }, 400);
+
+            console.log('Theend6.html 已加载 — 结局 2');
+            console.log('💡 点击屏幕推进对话，最终黑屏');
+
+        })();
+    </script>
+
+</body>
+</html>

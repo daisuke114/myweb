@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>张子轩 - 聊天</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #f2f2f2; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        /* 顶部标题栏 */
+        .header {
+            background-color: #ffffff;
+            padding: 16px 16px 12px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding-top: 44px;
+            position: relative;
+        }
+        
+        /* 返回按钮 */
+        .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 12px;
+            color: #07c160;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .back-btn:active { opacity: 0.6; }
+
+        /* 头像（可点击触发弹窗） */
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: opacity 0.1s;
+        }
+        .chat-avatar:active { opacity: 0.6; }
+        .chat-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .chat-name { margin-left: 12px; font-size: 18px; font-weight: 600; color: #1a1a1a; }
+
+        /* 聊天内容区域 */
+        .chat-area {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* 时间戳 */
+        .timestamp {
+            text-align: center;
+            font-size: 12px;
+            color: #b0b0b0;
+            margin: 8px 0;
+        }
+
+        /* 气泡 - 对方（张子轩，白色） */
+        .bubble-other {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            max-width: 80%;
+        }
+        .bubble-other .mini-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid #e0e0e0;
+        }
+        .bubble-other .mini-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .bubble-other .msg {
+            background: #ffffff;
+            padding: 10px 14px;
+            border-radius: 16px 16px 16px 4px;
+            color: #1a1a1a;
+            font-size: 15px;
+            line-height: 1.5;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            word-break: break-all;
+        }
+
+        /* 气泡 - 自己（多分、風。，绿色） */
+        .bubble-self {
+            display: flex;
+            justify-content: flex-end;
+            max-width: 80%;
+            align-self: flex-end;
+        }
+        .bubble-self .msg {
+            background: #07c160;
+            padding: 10px 14px;
+            border-radius: 16px 16px 4px 16px;
+            color: #ffffff;
+            font-size: 15px;
+            line-height: 1.5;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            word-break: break-all;
+        }
+
+        /* 语音通话特殊样式 */
+        .bubble-call {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+        .bubble-call .msg {
+            background: #e8e8e8;
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* 底部输入框（占位） */
+        .input-bar {
+            background: #ffffff;
+            padding: 10px 16px 20px;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .input-bar input {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 20px;
+            border: 1px solid #e5e5e5;
+            background: #f8f8f8;
+            font-size: 15px;
+            outline: none;
+        }
+        .input-bar input:focus { border-color: #07c160; }
+        .input-bar .send-btn {
+            background: #07c160;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .input-bar .send-btn:active { background: #06a050; }
+
+        /* ===== 个人信息弹窗 ===== */
+        .profile-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .profile-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .profile-card {
+            background: #ffffff;
+            width: 320px;
+            border-radius: 20px;
+            padding: 30px 24px 20px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            transform: scale(0.95);
+            transition: transform 0.3s;
+        }
+        .profile-overlay.show .profile-card {
+            transform: scale(1);
+        }
+        .profile-card .big-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 12px;
+            border: 2px solid #e0e0e0;
+        }
+        .profile-card .big-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-card .p-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+        .profile-card .p-info {
+            font-size: 14px;
+            color: #666;
+            margin: 4px 0;
+        }
+        .profile-card .p-info span {
+            color: #999;
+        }
+        .profile-card .p-actions {
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .profile-card .p-actions button {
+            background: #f5f5f5;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 15px;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .profile-card .p-actions button:active { background: #e8e8e8; }
+        .profile-card .close-btn {
+            margin-top: 12px;
+            background: #07c160;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .profile-card .close-btn:active { background: #06a050; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="javascript:history.back()" class="back-btn">‹</a>
+        <!-- 点击头像弹出个人信息 -->
+        <div class="chat-avatar" onclick="showProfile()">
+            <img src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEW_A5qURUKLcrgOeCrsTSyX3yC5aTowQAClC0AAgvDiFaxgZx2Df3upTwE.png" alt="张子轩">
+        </div>
+        <div class="chat-name">张子轩</div>
+    </div>
+
+    <div class="chat-area" id="chatArea">
+
+        <!-- ===== 2026年4月-7月 日常对话 ===== -->
+
+        <div class="timestamp">2026年4月12日 14:22</div>
+        <div class="bubble-other">
+            <div class="mini-avatar"><img src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEW_A5qURUKLcrgOeCrsTSyX3yC5aTowQAClC0AAgvDiFaxgZx2Df3upTwE.png"></div>
+            <div class="msg">哥们，周末有空没？一起打游戏啊</div>
+        </div>
+        <div class="bubble-self">
+            <div class="msg">行啊，玩什么，来不来OW</div>
+        </div>
+
+        <div class="timestamp">2026年5月3日 09:45</div>
+        <div class="bubble-other">
+            <div class="mini-avatar"><img src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEW_A5qURUKLcrgOeCrsTSyX3yC5aTowQAClC0AAgvDiFaxgZx2Df3upTwE.png"></div>
+            <div class="msg">五一你去哪了？我回老家了，打不了OW</div>
+        </div>
+        <div class="bubble-self">
+            <div class="msg">在家躺了几天，哪都没去</div>
+        </div>
+
+        <div class="timestamp">2026年6月8日 20:10</div>
+        <div class="bubble-other">
+            <div class="mini-avatar"><img src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEW_A5qURUKLcrgOeCrsTSyX3yC5aTowQAClC0AAgvDiFaxgZx2Df3upTwE.png"></div>
+            <div class="msg">最近我的功力大增啊，我的铁拳已经至臻化境，上宗师指日可待啊</div>
+        </div>
+        <div class="bubble-self">
+            <div class="msg">五个对手 四发手炮 三个技能 两段位移 一句实话 零个办法</div>
+        </div>
+
+        <div class="timestamp">2026年6月22日 18:30</div>
+        <div class="bubble-other">
+            <div class="mini-avatar"><img src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEW_A5qURUKLcrgOeCrsTSyX3yC5aTowQAClC0AAgvDiFaxgZx2Df3upTwE.png"></div>
+            <div class="msg">最近怎么没消息了？你还好吗</div>
+        </div>
+        <div class="bubble-self">
+            <div class="msg">没事，最近有点忙</div>
+        </div>
+
+        <!-- ===== 核心剧情开始 ===== -->
+
+        <div class="timestamp">2026年7月11日 15:37</div>
+        <div class="bubble-other">
+            <div class="mini-avatar"><img src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEW_A5qURUKLcrgOeCrsTSyX3yC5aTowQAClC0AAgvDiFaxgZx2Df3upTwE.png"></div>
+            <div class="msg">兄弟</div>
+        </div>
+
+        <div class="timestamp">2026年7月11日 18:46</div>
+        <div class="bubble-self">
+            <div class="msg">咋了？</div>
+        </div>
+        <div class="bubble-self">
+            <div class="msg">怎么不回消息啊？</div>
+        </div>
+
+        <div class="bubble-call">
+            <div class="msg">📞 语音通话（无人接听）</div>
+        </div>
+        <div class="bubble-call">
+            <div class="msg">📞 语音通话（无人接听）</div>
+        </div>
+
+        <div class="bubble-self">
+            <div class="msg">我靠，不是你别搞啊，有点哈人啊</div>
+        </div>
+
+        <div class="timestamp">2026年7月13日 16:34</div>
+        <div class="bubble-self">
+            <div class="msg">兄弟，你人呢，这都几天了还不回消息，到底发生什么事情了？</div>
+        </div>
+
+    </div>
+
+    <!-- 底部输入框 -->
+    <div class="input-bar">
+        <input type="text" placeholder="输入消息...">
+        <button class="send-btn">发送</button>
+    </div>
+
+    <!-- ===== 个人信息弹窗 ===== -->
+    <div class="profile-overlay" id="profileOverlay" onclick="closeProfile(event)">
+        <div class="profile-card">
+            <div class="big-avatar">
+                <img src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEW_A5qURUKLcrgOeCrsTSyX3yC5aTowQAClC0AAgvDiFaxgZx2Df3upTwE.png" alt="张子轩">
+            </div>
+            <div class="p-name">张子轩</div>
+            <div class="p-info">QQ号：<span>鎴戝ソ甯?呮?垜濂藉竻</span></div>
+            <div class="p-info">地区：<span>粤西</span></div>
+            <div class="p-actions">
+                <!-- 点击QQ空间按钮跳转到 qq4.html -->
+                <button onclick="window.location.href='qq4.html'">QQ空间</button>
+            </div>
+            <button class="close-btn" onclick="closeProfileDirect()">关闭</button>
+        </div>
+    </div>
+
+    <script>
+        // 自动滚动到底部
+        const chatArea = document.getElementById('chatArea');
+        chatArea.scrollTop = chatArea.scrollHeight;
+
+        // 弹窗控制
+        function showProfile() {
+            document.getElementById('profileOverlay').classList.add('show');
+        }
+        function closeProfile(e) {
+            if (e.target === document.getElementById('profileOverlay')) {
+                document.getElementById('profileOverlay').classList.remove('show');
+            }
+        }
+        function closeProfileDirect() {
+            document.getElementById('profileOverlay').classList.remove('show');
+        }
+    </script>
+</body>
+</html>

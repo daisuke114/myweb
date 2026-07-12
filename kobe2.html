@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>结局 EX · Man，What can i say......</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            overflow-x: hidden;
+            cursor: default;
+            user-select: none;
+        }
+
+        .container {
+            max-width: 620px;
+            width: 100%;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            gap: 6px;
+        }
+
+        /* ---------- 装饰图片 ---------- */
+        .deco-image {
+            width: 100%;
+            max-width: 480px;
+            border-radius: 16px;
+            margin: 8px auto 16px auto;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 60px rgba(255, 170, 68, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            display: block;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 1.8s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---------- 文字区域 ---------- */
+        .text-area {
+            width: 100%;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .line {
+            color: #e8e0d8;
+            font-size: 19px;
+            line-height: 1.8;
+            letter-spacing: 0.5px;
+            opacity: 0;
+            transform: translateY(12px);
+            animation: fadeIn 0.8s ease forwards;
+            padding: 3px 0;
+        }
+
+        /* 延迟时间 */
+        .line.delay-1 { animation-delay: 0.2s; }
+        .line.delay-2 { animation-delay: 0.7s; }
+        .line.delay-3 { animation-delay: 1.2s; }
+        .line.delay-4 { animation-delay: 1.8s; }
+        .line.delay-5 { animation-delay: 2.5s; }
+        .line.delay-6 { animation-delay: 3.2s; }
+
+        .line .hell {
+            color: #ff5533;
+            font-weight: 700;
+            font-size: 22px;
+            letter-spacing: 2px;
+        }
+
+        .line .kobe-name {
+            color: #ffcc44;
+            font-weight: 700;
+            font-size: 23px;
+            text-shadow: 0 0 40px rgba(255, 200, 50, 0.08);
+        }
+
+        .line .man-line {
+            color: #ffdd44;
+            font-weight: 900;
+            font-size: 26px;
+            letter-spacing: 3px;
+            text-shadow: 0 0 40px rgba(255, 200, 50, 0.1);
+        }
+
+        .line .fade-text {
+            color: #777777;
+            font-size: 17px;
+            font-style: italic;
+        }
+
+        /* ---------- 结局标题 ---------- */
+        .ending-title {
+            margin-top: 24px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(16px);
+            animation: fadeIn 1.2s ease 4.6s forwards;
+        }
+
+        .ending-title .ex {
+            font-size: 26px;
+            font-weight: 700;
+            color: #ffaa44;
+            letter-spacing: 4px;
+            text-shadow: 0 0 40px rgba(255, 170, 68, 0.06);
+        }
+
+        .ending-title .ex-sub {
+            font-size: 18px;
+            color: #cc8844;
+            margin-top: 6px;
+            letter-spacing: 3px;
+            font-weight: 300;
+        }
+
+        .ending-title .ex-desc {
+            font-size: 14px;
+            color: #887766;
+            margin-top: 8px;
+            letter-spacing: 2px;
+            font-weight: 300;
+            font-style: italic;
+        }
+
+        /* ---------- 重新开始 ---------- */
+        .restart-area {
+            margin-top: 28px;
+            opacity: 0;
+            transform: translateY(16px);
+            animation: fadeIn 0.8s ease 5.8s forwards;
+        }
+
+        .restart-btn {
+            padding: 12px 36px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 170, 68, 0.08);
+            border-radius: 30px;
+            color: #887a6a;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.25s, transform 0.15s, border-color 0.25s, color 0.25s;
+            text-decoration: none;
+            display: inline-block;
+            letter-spacing: 1px;
+        }
+
+        .restart-btn:hover {
+            background: rgba(255, 170, 68, 0.04);
+            border-color: rgba(255, 170, 68, 0.15);
+            color: #b0a090;
+        }
+
+        .restart-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ---------- 小屏适配 ---------- */
+        @media (max-width: 480px) {
+            .line {
+                font-size: 16px;
+            }
+            .line .hell {
+                font-size: 19px;
+            }
+            .line .kobe-name {
+                font-size: 19px;
+            }
+            .line .man-line {
+                font-size: 22px;
+            }
+            .ending-title .ex {
+                font-size: 22px;
+            }
+            .ending-title .ex-sub {
+                font-size: 15px;
+            }
+            .restart-btn {
+                font-size: 13px;
+                padding: 10px 28px;
+            }
+            .deco-image {
+                max-width: 100%;
+                border-radius: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 装饰图片 -->
+        <img class="deco-image" src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEXDN5qUzR1Zec1E8P2c85NE7mleEn7ZwACNyAAAnbMoFbs9FqlV-dnRDwE.jpg" alt="地狱篮球" loading="lazy">
+
+        <!-- 文字区域 -->
+        <div class="text-area">
+            <div class="line delay-1">而后，你在输入了密码后，便晕了过去</div>
+            <div class="line delay-2">当你再次醒来的时候，已经来到了......</div>
+            <div class="line delay-3 hell">地狱？！</div>
+            <div class="line delay-4">而站在你面前的，是一个你绝对不能忘记的人......</div>
+            <div class="line delay-5 kobe-name">“科比？！”</div>
+            <div class="line delay-6">最终，你跟着他成为了地狱的篮球巨星，</div>
+            <div class="line delay-7" style="animation-delay:3.8s; font-size:20px; color:#ccaa88;">What can i say......</div>
+            <div class="line delay-8 man-line" style="animation-delay:4.4s;">Man，What can i say......</div>
+        </div>
+
+        <!-- 结局标题 -->
+        <div class="ending-title">
+            <div class="ex">✦ 结局 EX ✦</div>
+            <div class="ex-sub">“Man，What can i say......”</div>
+            <div class="ex-desc">— 地狱篮球 · 永不言弃 —</div>
+        </div>
+
+        <!-- 重新开始 -->
+        <div class="restart-area">
+            <a href="index.html" class="restart-btn">🔄 重新来过</a>
+        </div>
+    </div>
+
+    <script>
+        console.log('kobe2.html 已加载 — 结局 EX "Man，What can i say......"');
+        console.log('🔥 你输入密码后坠入了地狱...');
+        console.log('🏀 你遇见了科比，成为了地狱篮球巨星！');
+        console.log('💀 Man，What can i say......');
+    </script>
+
+</body>
+</html>

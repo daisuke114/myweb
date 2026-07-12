@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>回收站 · 锁住了.exe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #d9d9d9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 520px;
+            width: 100%;
+            background: #f0f0f0;
+            border-radius: 16px;
+            padding: 30px 24px 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            border: 1px solid #c0c0c0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #c0c0c0;
+        }
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .header-title .icon { font-size: 24px; }
+
+        .back-btn {
+            font-size: 18px;
+            padding: 6px 16px;
+            background: #e0e0e0;
+            border: 1px solid #b0b0b0;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #333;
+            transition: background 0.15s;
+            font-weight: 500;
+        }
+        .back-btn:active { background: #d0d0d0; }
+
+        .file-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 2px solid #d0d0d0;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .file-icon:active {
+            background: #e8e8e8;
+            transform: scale(0.97);
+        }
+        .file-icon .file-img {
+            font-size: 72px;
+            line-height: 1;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+        .file-icon .file-name {
+            font-size: 18px;
+            font-weight: 500;
+            color: #1a1a1a;
+            background: rgba(200,200,200,0.3);
+            padding: 4px 16px;
+            border-radius: 20px;
+        }
+
+        /* 弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.show { display: flex; }
+
+        .modal-box {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 28px 24px 24px;
+            max-width: 440px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            animation: modalFade 0.25s ease;
+        }
+        @keyframes modalFade {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        .modal-subtitle {
+            text-align: center;
+            color: #888;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        .question-item {
+            margin-bottom: 16px;
+        }
+        .question-item label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+            word-break: break-word;
+        }
+        .question-item input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #d0d0d0;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+            background: #fafafa;
+        }
+        .question-item input:focus {
+            border-color: #07c160;
+            background: #ffffff;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .modal-actions button {
+            flex: 1;
+            padding: 12px 0;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+        }
+        .modal-actions button:active { transform: scale(0.97); }
+        .btn-submit {
+            background: #07c160;
+            color: white;
+        }
+        .btn-submit:active { background: #06a050; }
+        .btn-cancel {
+            background: #e8e8e8;
+            color: #555;
+        }
+        .btn-cancel:active { background: #d8d8d8; }
+
+        /* 结果弹窗 */
+        .result-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1100;
+            padding: 20px;
+        }
+        .result-overlay.show { display: flex; }
+
+        .result-box {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px 24px 24px;
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            animation: modalFade 0.25s ease;
+        }
+        .result-box .result-icon {
+            font-size: 56px;
+            margin-bottom: 8px;
+        }
+        .result-box .result-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .result-box .result-title.success { color: #07c160; }
+        .result-box .result-title.fail { color: #ff3b30; }
+        .result-box .result-desc {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 6px;
+            line-height: 1.6;
+        }
+        .result-box .result-desc .bold-key {
+            font-weight: 700;
+            color: #d63031;
+        }
+        .result-box .btn-result {
+            margin-top: 16px;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #07c160;
+            color: white;
+            transition: background 0.15s;
+        }
+        .result-box .btn-result:active { background: #06a050; }
+        .result-box .btn-result.secondary {
+            background: #e8e8e8;
+            color: #555;
+        }
+        .result-box .btn-result.secondary:active { background: #d8d8d8; }
+
+        /* 手枪展示 */
+        .gun-display {
+            margin-top: 12px;
+            padding: 16px;
+            background: #1a1a1a;
+            border-radius: 14px;
+            border: 2px solid #ffd700;
+            color: #fff;
+            text-align: center;
+            width: 100%;
+            animation: gunGlow 2s ease-in-out infinite alternate;
+        }
+        @keyframes gunGlow {
+            from { box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
+            to { box-shadow: 0 0 30px rgba(255, 215, 0, 0.4); }
+        }
+        .gun-display .gun-icon {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto 8px;
+        }
+        .gun-display .gun-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffd700;
+            margin: 4px 0;
+        }
+        .gun-display .gun-desc {
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.6;
+        }
+        .gun-display .gun-desc .bold-key {
+            font-weight: 700;
+            color: #ffd700;
+        }
+
+        .hint-text {
+            font-size: 13px;
+            color: #888;
+            text-align: center;
+            margin-top: 6px;
+        }
+
+        @media (max-width: 420px) {
+            .container { padding: 20px 16px 30px; }
+            .file-icon .file-img { font-size: 56px; }
+            .file-icon .file-name { font-size: 16px; }
+            .modal-box { padding: 20px 16px; }
+            .gun-display .gun-icon { width: 60px; height: 60px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-title">
+                <span class="icon">🗑️</span> 回收站
+            </div>
+            <a href="index.html" class="back-btn">🏠 返回</a>
+        </div>
+
+        <div class="file-icon" id="fileIcon">
+            <div class="file-img">🔒</div>
+            <div class="file-name">锁住了.exe</div>
+        </div>
+
+        <div id="gunDisplay" style="display:none;" class="gun-display">
+            <img class="gun-icon" src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEXCqxqUtJqWyic1tyDIp6oiFh_18UrzQACYSYAAnbMmFaseYGeRLrhajwE.png" alt="左轮手枪">
+            <div class="gun-name">左轮手枪</div>
+            <div class="gun-desc">
+                一把枪，看起来似乎在某些<span class="bold-key">关键时候</span>有用......
+            </div>
+        </div>
+
+        <div class="hint-text" id="hintText">点击文件解锁它</div>
+    </div>
+
+    <!-- 问题弹窗 -->
+    <div class="modal-overlay" id="questionModal">
+        <div class="modal-box">
+            <div class="modal-title">🔐 解锁文件</div>
+            <div class="modal-subtitle">回答以下三个问题以解锁</div>
+
+            <div class="question-item">
+                <label>Q1: Sweet ______, how was I supposed to know anything?<br><span style="font-size:12px;color:#999;">（填写2位数的数字）</span></label>
+                <input type="text" id="q1Input" placeholder="输入2位数字..." maxlength="10" autocomplete="off">
+            </div>
+
+            <div class="question-item">
+                <label>Q2: 小樽到东京的距离：______<br><span style="font-size:12px;color:#999;">（填写数字，可带单位km）</span></label>
+                <input type="text" id="q2Input" placeholder="输入距离..." maxlength="20" autocomplete="off">
+            </div>
+
+            <div class="question-item">
+                <label>Q3: Shakedown ______<br><span style="font-size:12px;color:#999;">（填写4位数的数字）</span></label>
+                <input type="text" id="q3Input" placeholder="输入4位数字..." maxlength="10" autocomplete="off">
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" id="cancelBtn">取消</button>
+                <button class="btn-submit" id="submitBtn">提交答案</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 结果弹窗 -->
+    <div class="result-overlay" id="resultModal">
+        <div class="result-box">
+            <div class="result-icon" id="resultIcon">✅</div>
+            <div class="result-title" id="resultTitle">成功</div>
+            <div class="result-desc" id="resultDesc">描述文字</div>
+            <button class="btn-result" id="resultBtn">确定</button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- 常量 ----------
+            const GUN_KEY = 'has_revolver';
+            const ERROR_COUNT_KEY = 'recycle_error_count';
+            const LOCKED_KEY = 'recycle_locked';
+
+            // 检查是否被永久锁定
+            if (sessionStorage.getItem(LOCKED_KEY) === 'true') {
+                window.location.href = 'First.html';
+                return;
+            }
+
+            // 检查是否已经获得手枪
+            let hasGun = sessionStorage.getItem(GUN_KEY) === 'true';
+            let errorCount = parseInt(sessionStorage.getItem(ERROR_COUNT_KEY) || '0');
+
+            // DOM 引用
+            const fileIcon = document.getElementById('fileIcon');
+            const questionModal = document.getElementById('questionModal');
+            const resultModal = document.getElementById('resultModal');
+            const q1Input = document.getElementById('q1Input');
+            const q2Input = document.getElementById('q2Input');
+            const q3Input = document.getElementById('q3Input');
+            const submitBtn = document.getElementById('submitBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const resultBtn = document.getElementById('resultBtn');
+            const resultIcon = document.getElementById('resultIcon');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultDesc = document.getElementById('resultDesc');
+            const gunDisplay = document.getElementById('gunDisplay');
+            const hintText = document.getElementById('hintText');
+
+            // 答案配置
+            const ANSWERS = {
+                q1: ['16'],
+                q2: ['834.194km', '834.194', '834194'],
+                q3: ['1979']
+            };
+
+            // ---------- 更新显示 ----------
+            function updateGunDisplay() {
+                if (hasGun) {
+                    gunDisplay.style.display = 'block';
+                    hintText.textContent = '已获得左轮手枪';
+                    document.querySelector('.file-img').textContent = '📂';
+                    document.querySelector('.file-name').textContent = '已解锁';
+                    fileIcon.style.cursor = 'default';
+                    fileIcon.style.opacity = '0.7';
+                    fileIcon.removeEventListener('click', openModal);
+
+                    // ---------- 获得手枪后跳转到 Meta.html ----------
+                    setTimeout(() => {
+                        window.location.href = 'Meta.html';
+                    }, 1500);
+                } else {
+                    gunDisplay.style.display = 'none';
+                    hintText.textContent = '点击文件解锁它 (错误次数: ' + errorCount + '/3)';
+                    document.querySelector('.file-img').textContent = '🔒';
+                    document.querySelector('.file-name').textContent = '锁住了.exe';
+                    fileIcon.style.cursor = 'pointer';
+                    fileIcon.style.opacity = '1';
+                    fileIcon.addEventListener('click', openModal);
+                }
+            }
+
+            // ---------- 强制跳转 ----------
+            function forceRedirect() {
+                sessionStorage.setItem(LOCKED_KEY, 'true');
+                window.location.href = 'First.html';
+            }
+
+            // ---------- 打开问题弹窗 ----------
+            function openModal() {
+                if (hasGun) return;
+                if (errorCount >= 3) {
+                    forceRedirect();
+                    return;
+                }
+                q1Input.value = '';
+                q2Input.value = '';
+                q3Input.value = '';
+                questionModal.classList.add('show');
+                setTimeout(() => q1Input.focus(), 100);
+            }
+
+            // ---------- 关闭问题弹窗 ----------
+            function closeModal() {
+                questionModal.classList.remove('show');
+            }
+
+            // ---------- 显示结果弹窗 ----------
+            function showResult(icon, title, desc, isSuccess, callback) {
+                resultIcon.textContent = icon;
+                resultTitle.textContent = title;
+                resultTitle.className = 'result-title ' + (isSuccess ? 'success' : 'fail');
+                resultDesc.innerHTML = desc;
+                resultModal.classList.add('show');
+
+                resultBtn.onclick = function() {
+                    resultModal.classList.remove('show');
+                    if (callback) callback();
+                };
+            }
+
+            // ---------- 检查答案 ----------
+            function checkAnswers() {
+                const a1 = q1Input.value.trim();
+                const a2 = q2Input.value.trim();
+                const a3 = q3Input.value.trim();
+
+                if (!a1 || !a2 || !a3) {
+                    showResult('⚠️', '请完整回答', '所有问题都必须填写答案。', false);
+                    return;
+                }
+
+                const q1Correct = ANSWERS.q1.some(ans => a1 === ans);
+                const q2Correct = ANSWERS.q2.some(ans => a2.toLowerCase() === ans.toLowerCase());
+                const q3Correct = ANSWERS.q3.some(ans => a3 === ans);
+
+                if (q1Correct && q2Correct && q3Correct) {
+                    // 全部正确
+                    hasGun = true;
+                    sessionStorage.setItem(GUN_KEY, 'true');
+                    errorCount = 0;
+                    sessionStorage.setItem(ERROR_COUNT_KEY, '0');
+                    closeModal();
+
+                    showResult('', '解锁成功！', `
+                        你获得了一把 <strong>左轮手枪</strong>！<br>
+                        一把枪，看起来似乎在某些<span class="bold-key">关键时候</span>有用......
+                    `, true, function() {
+                        updateGunDisplay();
+                    });
+                } else {
+                    errorCount++;
+                    sessionStorage.setItem(ERROR_COUNT_KEY, String(errorCount));
+                    closeModal();
+
+                    if (errorCount >= 3) {
+                        showResult('🚫', '错误次数过多', '你已经错误了3次，将被强制退出...', false, function() {
+                            forceRedirect();
+                        });
+                    } else {
+                        showResult('❌', '答案错误', `
+                            你喜欢听音乐吗？这个问题与音乐有关。<br>
+                            <span style="font-size:13px;color:#999;">剩余错误次数：${3 - errorCount}/3</span>
+                        `, false, function() {
+                            openModal();
+                        });
+                    }
+                }
+            }
+
+            // ---------- 事件绑定 ----------
+            submitBtn.addEventListener('click', checkAnswers);
+            cancelBtn.addEventListener('click', closeModal);
+
+            questionModal.addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && questionModal.classList.contains('show')) {
+                    e.preventDefault();
+                    checkAnswers();
+                }
+            });
+
+            // ---------- 初始化 ----------
+            updateGunDisplay();
+
+            if (errorCount >= 3 && !hasGun) {
+                forceRedirect();
+                return;
+            }
+
+            console.log('huishouzhan.html 已加载');
+            console.log('💡 答案提示：Q1=16, Q2=834.194km / 834.194 / 834194, Q3=1979');
+            console.log('❌ 错误次数：' + errorCount + '/3');
+            if (hasGun) {
+                console.log('已获得左轮手枪 → 即将跳转到 Meta.html');
+            }
+        })();
+    </script>
+
+</body>
+</html>

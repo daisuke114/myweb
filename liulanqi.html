@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>浏览器 · Edge 风格</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ---------- 顶部标题栏 (类似 Edge) ---------- */
+        .browser-header {
+            background: #ffffff;
+            padding: 10px 16px 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            flex-shrink: 0;
+            border-bottom: 1px solid #e8eaed;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            cursor: pointer;
+            color: #5f6368;
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: background 0.15s;
+            line-height: 1;
+        }
+        .back-btn:hover { background: #f1f3f4; }
+        .back-btn:active { background: #e8eaed; }
+
+        .browser-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: #202124;
+            letter-spacing: 0.3px;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .header-actions span {
+            font-size: 18px;
+            color: #5f6368;
+            cursor: default;
+            padding: 4px 6px;
+            border-radius: 6px;
+            transition: background 0.15s;
+        }
+        .header-actions span:hover { background: #f1f3f4; }
+
+        /* ---------- 地址栏 / 搜索框区域 ---------- */
+        .search-container {
+            padding: 20px 20px 12px 20px;
+            background: #ffffff;
+            border-bottom: 1px solid #e8eaed;
+            flex-shrink: 0;
+        }
+
+        .search-wrapper {
+            max-width: 680px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            background: #f1f3f4;
+            border-radius: 24px;
+            padding: 6px 16px;
+            transition: background 0.2s, box-shadow 0.2s;
+            border: 1px solid transparent;
+        }
+        .search-wrapper:focus-within {
+            background: #ffffff;
+            border-color: #d0d7de;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .search-icon {
+            font-size: 18px;
+            color: #5f6368;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 16px;
+            padding: 10px 0;
+            color: #202124;
+            min-width: 0;
+            width: 100%;
+        }
+        .search-input::placeholder {
+            color: #9aa0a6;
+            font-weight: 400;
+        }
+
+        .search-clear {
+            font-size: 16px;
+            color: #9aa0a6;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 50%;
+            transition: background 0.15s;
+            display: none;
+            flex-shrink: 0;
+        }
+        .search-clear:hover { background: #e8eaed; }
+        .search-clear.visible { display: block; }
+
+        /* ---------- 搜索建议 / 快捷方式 (模拟) ---------- */
+        .shortcuts {
+            padding: 20px 20px 10px 20px;
+            flex: 1;
+            overflow-y: auto;
+            max-width: 680px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .shortcuts-title {
+            font-size: 13px;
+            color: #5f6368;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .shortcut-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 16px 12px;
+        }
+
+        .shortcut-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 6px;
+            border-radius: 12px;
+            cursor: default;
+            transition: background 0.15s;
+            text-decoration: none;
+            color: #202124;
+            gap: 4px;
+        }
+        .shortcut-item:hover { background: #f1f3f4; }
+        .shortcut-item:active { background: #e8eaed; }
+
+        .shortcut-item .sc-icon {
+            font-size: 32px;
+            line-height: 1.2;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.04));
+        }
+        .shortcut-item .sc-label {
+            font-size: 11px;
+            color: #3c4043;
+            text-align: center;
+            max-width: 80px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ---------- 底部信息 ---------- */
+        .footer {
+            text-align: center;
+            padding: 12px 16px 20px;
+            color: #9aa0a6;
+            font-size: 12px;
+            border-top: 1px solid #e8eaed;
+            background: #ffffff;
+            flex-shrink: 0;
+        }
+        .footer span { margin: 0 8px; }
+
+        /* ---------- 响应式 ---------- */
+        @media (max-width: 480px) {
+            .browser-header { padding: 8px 12px; }
+            .search-container { padding: 14px 12px 10px; }
+            .search-wrapper { padding: 4px 12px; }
+            .search-input { font-size: 15px; padding: 8px 0; }
+            .shortcuts { padding: 14px 12px 10px; }
+            .shortcut-grid { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 10px; }
+            .shortcut-item .sc-icon { font-size: 26px; }
+            .shortcut-item .sc-label { font-size: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部标题栏 (类似 Edge) -->
+    <div class="browser-header">
+        <a href="index.html" class="back-btn" title="返回桌面">‹</a>
+        <span class="browser-title">🌐 新标签页</span>
+        <div class="header-actions">
+            <span>➕</span>
+            <span>⋯</span>
+        </div>
+    </div>
+
+    <!-- 搜索框区域 -->
+    <div class="search-container">
+        <div class="search-wrapper" id="searchWrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="searchInput" placeholder="搜索或输入网址" autofocus>
+            <span class="search-clear" id="clearBtn">✕</span>
+        </div>
+    </div>
+
+    <!-- 快捷方式 / 常用网站 -->
+    <div class="shortcuts">
+        <div class="shortcuts-title">📌 常用网站</div>
+        <div class="shortcut-grid">
+            <a href="#" class="shortcut-item" onclick="quickSearch('百度')">
+                <span class="sc-icon">🔵</span>
+                <span class="sc-label">百度</span>
+            </a>
+            <a href="#" class="shortcut-item" onclick="quickSearch('B站')">
+                <span class="sc-icon">🟣</span>
+                <span class="sc-label">B站</span>
+            </a>
+            <a href="#" class="shortcut-item" onclick="quickSearch('GitHub')">
+                <span class="sc-icon">🐙</span>
+                <span class="sc-label">GitHub</span>
+            </a>
+            <a href="#" class="shortcut-item" onclick="quickSearch('知乎')">
+                <span class="sc-icon">🟦</span>
+                <span class="sc-label">知乎</span>
+            </a>
+            <a href="#" class="shortcut-item" onclick="quickSearch('微博')">
+                <span class="sc-icon">🟠</span>
+                <span class="sc-label">微博</span>
+            </a>
+            <a href="#" class="shortcut-item" onclick="quickSearch('豆瓣')">
+                <span class="sc-icon">🟩</span>
+                <span class="sc-label">豆瓣</span>
+            </a>
+            <a href="#" class="shortcut-item" onclick="quickSearch('小红书')">
+                <span class="sc-icon">🔴</span>
+                <span class="sc-label">小红书</span>
+            </a>
+            <a href="#" class="shortcut-item" onclick="quickSearch('网易云')">
+                <span class="sc-icon">🎵</span>
+                <span class="sc-label">网易云</span>
+            </a>
+            <!-- 新增：地狱 → kobe.html -->
+            <a href="kobe.html" class="shortcut-item">
+                <span class="sc-icon">🔥</span>
+                <span class="sc-label">地狱</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+        <span>🔒 安全浏览</span>
+        <span>•</span>
+        <span>🌐 搜索引擎: 默认</span>
+        <span>•</span>
+        <span id="searchCount">0 次搜索</span>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            const searchInput = document.getElementById('searchInput');
+            const clearBtn = document.getElementById('clearBtn');
+            const searchWrapper = document.getElementById('searchWrapper');
+            const searchCountEl = document.getElementById('searchCount');
+            let searchCount = 0;
+
+            // ---------- 执行搜索：跳转到 zhongzhuanye.html ----------
+            function performSearch(query) {
+                if (!query || query.trim() === '') return;
+                const trimmed = query.trim();
+                searchCount++;
+                searchCountEl.textContent = searchCount + ' 次搜索';
+
+                // 跳转到 zhongzhuanye.html，携带关键词
+                const encodedQuery = encodeURIComponent(trimmed);
+                window.location.href = 'zhongzhuanye.html?q=' + encodedQuery;
+            }
+
+            // ---------- 快捷搜索 ----------
+            window.quickSearch = function(name) {
+                // 将快捷词填入搜索框并自动搜索
+                searchInput.value = name;
+                toggleClearBtn();
+                performSearch(name);
+            };
+
+            // ---------- 清除按钮显示/隐藏 ----------
+            function toggleClearBtn() {
+                if (searchInput.value.length > 0) {
+                    clearBtn.classList.add('visible');
+                } else {
+                    clearBtn.classList.remove('visible');
+                }
+            }
+
+            // ---------- 清除输入 ----------
+            clearBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                searchInput.value = '';
+                toggleClearBtn();
+                searchInput.focus();
+            });
+
+            // ---------- 输入监听 ----------
+            searchInput.addEventListener('input', toggleClearBtn);
+
+            // ---------- 回车搜索 ----------
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const query = searchInput.value.trim();
+                    if (query) {
+                        performSearch(query);
+                    }
+                }
+            });
+
+            // ---------- 点击外部可聚焦搜索框 ----------
+            document.addEventListener('click', function(e) {
+                const target = e.target;
+                if (target === document.body || target.closest('.shortcuts') || target.closest('.footer')) {
+                    searchInput.focus();
+                }
+            });
+
+            // ---------- 初始化 ----------
+            toggleClearBtn();
+            setTimeout(() => searchInput.focus(), 100);
+
+            console.log('liulanqi.html 已加载 (Edge 风格) — 搜索将跳转到 zhongzhuanye.html');
+            console.log('🔥 新增快捷方式 "地狱" → kobe.html');
+        })();
+    </script>
+
+</body>
+</html>

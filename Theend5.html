@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>结局 EX · 皮革尬的</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0a0a0f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 520px;
+            width: 100%;
+            background: #12121a;
+            border-radius: 28px;
+            padding: 32px 28px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 200, 80, 0.08) inset;
+            position: relative;
+            overflow: hidden;
+            animation: containerPulse 3s ease-in-out;
+        }
+
+        @keyframes containerPulse {
+            0% { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 200, 80, 0.08) inset; }
+            50% { box-shadow: 0 20px 80px rgba(255, 200, 80, 0.15), 0 0 0 2px rgba(255, 200, 80, 0.15) inset; }
+            100% { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 200, 80, 0.08) inset; }
+        }
+
+        /* 顶部装饰线 — 金色 */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ffcc44, #ffdd66, #ffcc44);
+            opacity: 0.6;
+        }
+
+        /* 标题 */
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffcc44;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+            text-shadow: 0 0 20px rgba(255, 200, 80, 0.15);
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 13px;
+            color: #ccaa55;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        /* 图片容器 — 居中 */
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 8px auto 18px auto;
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.03);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+            max-width: 100%;
+        }
+        .image-container img {
+            width: 100%;
+            max-height: 340px;
+            object-fit: cover;
+            display: block;
+            border-radius: 16px;
+        }
+
+        /* 故事正文 */
+        .story {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 4px;
+        }
+
+        .story p {
+            color: #d8d0c0;
+            font-size: 16px;
+            line-height: 1.9;
+            letter-spacing: 0.5px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 14px 18px;
+            border-radius: 14px;
+            border-left: 3px solid rgba(255, 200, 80, 0.2);
+            transition: all 0.2s;
+            text-shadow: 0 0 8px rgba(0,0,0,0.3);
+        }
+
+        .story p strong {
+            color: #ffdd66;
+            font-weight: 600;
+        }
+
+        .story p .highlight {
+            color: #ffcc44;
+            font-weight: 600;
+            text-shadow: 0 0 12px rgba(255, 200, 80, 0.15);
+        }
+
+        .story p .money {
+            color: #66dd88;
+            font-weight: 700;
+            text-shadow: 0 0 12px rgba(100, 220, 130, 0.15);
+        }
+
+        .story p .subtle {
+            color: #aa9988;
+            font-style: italic;
+        }
+
+        /* 分隔装饰 */
+        .fade-divider {
+            text-align: center;
+            color: #5a4a3a;
+            font-size: 18px;
+            letter-spacing: 6px;
+            padding: 2px 0;
+            opacity: 0.3;
+            user-select: none;
+        }
+
+        /* 结局标签 */
+        .ending-tag {
+            margin-top: 22px;
+            text-align: center;
+            padding: 14px 0;
+            border-top: 1px solid rgba(255, 200, 80, 0.08);
+            border-bottom: 1px solid rgba(255, 200, 80, 0.08);
+        }
+        .ending-tag .ex {
+            font-size: 28px;
+            font-weight: 900;
+            color: #ffcc44;
+            text-shadow: 0 0 30px rgba(255, 200, 80, 0.15);
+            letter-spacing: 4px;
+        }
+        .ending-tag .ex-label {
+            display: block;
+            font-size: 14px;
+            color: #aa8855;
+            margin-top: 4px;
+            letter-spacing: 6px;
+            font-weight: 300;
+        }
+        .ending-tag .ex-sub {
+            display: block;
+            font-size: 16px;
+            color: #ccaa66;
+            margin-top: 6px;
+            font-weight: 500;
+            letter-spacing: 2px;
+        }
+
+        /* 底部按钮 */
+        .actions {
+            margin-top: 24px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            min-width: 140px;
+            letter-spacing: 1px;
+        }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: #ccaa66;
+            border: 1px solid rgba(255, 200, 80, 0.15);
+        }
+        .btn-secondary:active {
+            transform: scale(0.94);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* 闪烁光标效果 (装饰) */
+        .glitch-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: #ffcc44;
+            border-radius: 50%;
+            margin-left: 4px;
+            animation: pulse-dot 1.8s ease-in-out infinite;
+            vertical-align: middle;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* 小屏适配 */
+        @media (max-width: 420px) {
+            .container { padding: 24px 16px 30px; }
+            .story p { font-size: 14px; padding: 12px 14px; }
+            .title { font-size: 18px; }
+            .btn { padding: 10px 20px; font-size: 13px; min-width: 110px; }
+            .ending-tag .ex { font-size: 22px; }
+            .image-container img { max-height: 240px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 标题 -->
+        <div class="title">
+            ✦ 结局 EX ✦
+            <span class="glitch-dot"></span>
+        </div>
+        <div class="subtitle">— 皮革尬的 —</div>
+
+        <!-- 图片 -->
+        <div class="image-container">
+            <img src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEXCnFqUqo-vGc1G6rpDieOiqzekzeURwACHCYAAnbMmFYvZisKjZxj-jwE.jpg" alt="皮革尬的" loading="lazy">
+        </div>
+
+        <!-- 故事正文 -->
+        <div class="story">
+
+            <p>
+                而这天后，你跟着 <strong>John Pork</strong> 一步步成为了网红...... 📱
+            </p>
+
+            <p>
+                现在你是真正的大网红了，天天都可以获得 <span class="money">十万美刀</span>！ 💰
+            </p>
+
+            <div class="fade-divider">· · ·</div>
+
+            <p>
+                只不过，你总感觉自己的 <span class="highlight">长相</span> 变了许多...... 🤔
+            </p>
+
+            <p style="border-left-color: rgba(255, 200, 80, 0.08); background: rgba(255, 255, 255, 0.01);">
+                <span class="subtle">—— 这真的是你吗？还是说...你已经不再是“你”了？ ——</span>
+            </p>
+
+        </div>
+
+        <!-- 结局标签 -->
+        <div class="ending-tag">
+            <span class="ex">✦ EX ✦</span>
+            <span class="ex-label">— 隐藏结局 —</span>
+            <span class="ex-sub">“皮革尬的”</span>
+        </div>
+
+        <!-- 操作按钮 — 只有重新来过 -->
+        <div class="actions">
+            <a href="First.html" class="btn btn-secondary" id="restartBtn">🔄 重新来过</a>
+        </div>
+
+        <!-- 底部微小装饰 -->
+        <div style="text-align: center; margin-top: 16px; font-size: 11px; color: #3a3a2a; letter-spacing: 2px; user-select: none;">
+            —— 名利场 · 镜中人 ——
+        </div>
+    </div>
+
+    <script>
+        // 页面加载时控制台彩蛋
+        console.log('✦ 结局 EX · 皮革尬的 ✦');
+        console.log('— 你跟着 John Pork 成为了网红... —');
+        console.log('💰 天天都可以获得十万美刀！');
+        console.log('— 只不过，你总感觉自己的长相变了许多... —');
+
+        // 点击"重新来过"按钮时，跳转至 First.html
+        const restartBtn = document.getElementById('restartBtn');
+        if (restartBtn) {
+            restartBtn.addEventListener('click', function(e) {
+                console.log('🔄 重新来过 — 跳转至 index.html');
+                window.location.href = 'index.html';
+            });
+        }
+    </script>
+
+</body>
+</html>

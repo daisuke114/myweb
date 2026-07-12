@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>结局 1 · 无事发生</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0a0a0f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 520px;
+            width: 100%;
+            background: #12121a;
+            border-radius: 28px;
+            padding: 32px 28px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(100, 100, 120, 0.08) inset;
+            position: relative;
+            overflow: hidden;
+            animation: containerPulse 3s ease-in-out;
+        }
+
+        @keyframes containerPulse {
+            0% { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(100, 100, 120, 0.08) inset; }
+            50% { box-shadow: 0 20px 80px rgba(150, 150, 180, 0.1), 0 0 0 2px rgba(150, 150, 180, 0.1) inset; }
+            100% { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(100, 100, 120, 0.08) inset; }
+        }
+
+        /* 顶部装饰线 — 平淡灰色 */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #888, #aaa, #888);
+            opacity: 0.4;
+        }
+
+        /* 标题 */
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: #aab;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+            text-shadow: 0 0 20px rgba(150, 150, 180, 0.08);
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 13px;
+            color: #667;
+            letter-spacing: 3px;
+            margin-bottom: 28px;
+            font-weight: 300;
+        }
+
+        /* 故事正文 — 居中，平静 */
+        .story {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 0;
+        }
+
+        .story p {
+            color: #b8bcc8;
+            font-size: 17px;
+            line-height: 1.9;
+            letter-spacing: 0.8px;
+            text-align: center;
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 3px solid rgba(150, 150, 180, 0.15);
+            text-shadow: 0 0 8px rgba(0,0,0,0.3);
+            max-width: 90%;
+        }
+
+        .story p .highlight {
+            color: #8899aa;
+            font-weight: 500;
+        }
+
+        /* 分隔装饰 */
+        .divider {
+            text-align: center;
+            color: #445;
+            font-size: 18px;
+            letter-spacing: 8px;
+            padding: 6px 0;
+            opacity: 0.3;
+            user-select: none;
+        }
+
+        /* 结局标签 */
+        .ending-tag {
+            margin-top: 28px;
+            text-align: center;
+            padding: 14px 0;
+            border-top: 1px solid rgba(150, 150, 180, 0.08);
+            border-bottom: 1px solid rgba(150, 150, 180, 0.08);
+        }
+        .ending-tag .ex {
+            font-size: 26px;
+            font-weight: 700;
+            color: #8899aa;
+            text-shadow: 0 0 30px rgba(150, 150, 180, 0.08);
+            letter-spacing: 4px;
+        }
+        .ending-tag .ex-label {
+            display: block;
+            font-size: 14px;
+            color: #667;
+            margin-top: 4px;
+            letter-spacing: 6px;
+            font-weight: 300;
+        }
+        .ending-tag .ex-sub {
+            display: block;
+            font-size: 16px;
+            color: #8899aa;
+            margin-top: 6px;
+            font-weight: 500;
+            letter-spacing: 2px;
+        }
+
+        /* 底部按钮 */
+        .actions {
+            margin-top: 28px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            min-width: 140px;
+            letter-spacing: 1px;
+        }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: #88a0b0;
+            border: 1px solid rgba(150, 150, 180, 0.15);
+        }
+        .btn-secondary:active {
+            transform: scale(0.94);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* 闪烁光标效果 (装饰) */
+        .glitch-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: #8899aa;
+            border-radius: 50%;
+            margin-left: 4px;
+            animation: pulse-dot 2s ease-in-out infinite;
+            vertical-align: middle;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+
+        /* 小屏适配 */
+        @media (max-width: 420px) {
+            .container { padding: 24px 16px 30px; }
+            .story p { font-size: 15px; padding: 12px 14px; }
+            .title { font-size: 18px; }
+            .btn { padding: 10px 20px; font-size: 13px; min-width: 110px; }
+            .ending-tag .ex { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 标题 -->
+        <div class="title">
+            ✦ 结局 1 ✦
+            <span class="glitch-dot"></span>
+        </div>
+        <div class="subtitle">— 无事发生 —</div>
+
+        <!-- 故事正文 -->
+        <div class="story">
+            <p>
+                你觉得他只不过是有些忙而已，<br>
+                毕竟他只是个网友，<br>
+                也许你很快就会忘了他吧...... 🌙
+            </p>
+
+            <div class="divider">· · ·</div>
+
+            <p style="border-left-color: rgba(150,150,180,0.08); background: rgba(255,255,255,0.01);">
+                <span class="highlight">一切如常，什么都没有改变。</span>
+            </p>
+        </div>
+
+        <!-- 结局标签 -->
+        <div class="ending-tag">
+            <span class="ex">✦ 1 ✦</span>
+            <span class="ex-label">— 普通结局 —</span>
+            <span class="ex-sub">“无事发生”</span>
+        </div>
+
+        <!-- 操作按钮 — 只有重新来过 -->
+        <div class="actions">
+            <a href="First.html" class="btn btn-secondary" id="restartBtn">🔄 重新来过</a>
+        </div>
+
+        <!-- 底部微小装饰 -->
+        <div style="text-align: center; margin-top: 18px; font-size: 11px; color: #2a3a3a; letter-spacing: 2px; user-select: none;">
+            —— 平静如常 · 生活继续 ——
+        </div>
+    </div>
+
+    <script>
+        // 页面加载时控制台彩蛋
+        console.log('✦ 结局 1 · 无事发生 ✦');
+        console.log('— 你觉得他只不过是有些忙而已... —');
+
+        // 点击"重新来过"按钮时，跳转至 First.html
+        const restartBtn = document.getElementById('restartBtn');
+        if (restartBtn) {
+            restartBtn.addEventListener('click', function(e) {
+                console.log('🔄 重新来过 — 跳转至 index.html');
+                window.location.href = 'index.html';
+            });
+        }
+    </script>
+
+</body>
+</html>

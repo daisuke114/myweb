@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>验证 · 地狱入口</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            position: relative;
+        }
+
+        /* ---------- 回退按钮 ---------- */
+        .back-btn {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            z-index: 10;
+            font-size: 28px;
+            color: #666666;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: background 0.2s, color 0.2s, transform 0.15s;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #999999;
+        }
+
+        .back-btn:active {
+            transform: scale(0.92);
+        }
+
+        .container {
+            max-width: 420px;
+            width: 100%;
+            background: #1a1a1a;
+            border-radius: 20px;
+            padding: 36px 28px 32px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* 图标 */
+        .lock-icon {
+            font-size: 56px;
+            line-height: 1;
+            filter: drop-shadow(0 4px 20px rgba(200, 50, 50, 0.15));
+        }
+
+        /* 标题 */
+        .title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #e8e0d8;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #887a6a;
+            text-align: center;
+            letter-spacing: 0.5px;
+            margin-top: -8px;
+        }
+
+        /* 密码输入 */
+        .input-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .input-group label {
+            font-size: 14px;
+            color: #887a6a;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 8px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.25s, box-shadow 0.25s;
+            font-family: 'Courier New', monospace;
+        }
+
+        .input-group input:focus {
+            border-color: rgba(200, 60, 60, 0.3);
+            box-shadow: 0 0 30px rgba(200, 60, 60, 0.04);
+        }
+
+        .input-group input::placeholder {
+            color: #444444;
+            letter-spacing: 2px;
+            font-weight: 400;
+            font-size: 16px;
+        }
+
+        /* 错误信息 */
+        .error-msg {
+            color: #cc4444;
+            font-size: 14px;
+            text-align: center;
+            min-height: 22px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* 提交按钮 */
+        .submit-btn {
+            width: 100%;
+            padding: 14px 0;
+            background: rgba(200, 60, 60, 0.12);
+            border: 1px solid rgba(200, 60, 60, 0.2);
+            border-radius: 12px;
+            color: #cc6666;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.25s, transform 0.15s, border-color 0.25s, color 0.25s;
+            letter-spacing: 2px;
+        }
+
+        .submit-btn:hover {
+            background: rgba(200, 60, 60, 0.18);
+            border-color: rgba(200, 60, 60, 0.3);
+            color: #dd8888;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.96);
+            background: rgba(200, 60, 60, 0.25);
+        }
+
+        /* 提示 */
+        .hint {
+            font-size: 12px;
+            color: #444444;
+            text-align: center;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* 小屏适配 */
+        @media (max-width: 480px) {
+            .container {
+                padding: 28px 20px 24px;
+            }
+            .lock-icon {
+                font-size: 44px;
+            }
+            .title {
+                font-size: 18px;
+            }
+            .input-group input {
+                font-size: 18px;
+                padding: 12px 14px;
+            }
+            .submit-btn {
+                font-size: 15px;
+                padding: 12px 0;
+            }
+            .back-btn {
+                top: 16px;
+                left: 16px;
+                font-size: 24px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 回退按钮 -->
+    <a href="liulanqi.html" class="back-btn" title="返回浏览器">‹</a>
+
+    <div class="container">
+        <!-- 锁图标 -->
+        <div class="lock-icon">🔒</div>
+
+        <!-- 标题 -->
+        <div class="title">地狱入口</div>
+        <div class="subtitle">请输入四位密码以继续</div>
+
+        <!-- 密码输入 -->
+        <div class="input-group">
+            <label for="passwordInput">🔑 密码</label>
+            <input type="password" id="passwordInput" placeholder="请输入四位数字" maxlength="4" autocomplete="off" inputmode="numeric">
+        </div>
+
+        <!-- 错误信息 -->
+        <div class="error-msg" id="errorMsg"></div>
+
+        <!-- 提交按钮 -->
+        <button class="submit-btn" id="submitBtn">确 认</button>
+
+        <div class="hint">— 四位数字密码 —</div>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            const passwordInput = document.getElementById('passwordInput');
+            const submitBtn = document.getElementById('submitBtn');
+            const errorMsg = document.getElementById('errorMsg');
+
+            // ---------- 验证密码 ----------
+            function validatePassword() {
+                const password = passwordInput.value.trim();
+                errorMsg.textContent = '';
+
+                // 检查是否为4位数字
+                if (!/^\d{4}$/.test(password)) {
+                    errorMsg.textContent = '❌ 请输入四位数字密码';
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                    return;
+                }
+
+                if (password === '6230') {
+                    // 密码正确，跳转到 kobe2.html
+                    window.location.href = 'kobe2.html';
+                } else {
+                    errorMsg.textContent = '❌ 密码错误，请重新输入';
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                }
+            }
+
+            // ---------- 事件绑定 ----------
+            submitBtn.addEventListener('click', validatePassword);
+
+            passwordInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    validatePassword();
+                }
+            });
+
+            // 限制输入长度和字符
+            passwordInput.addEventListener('input', function() {
+                // 只允许数字
+                this.value = this.value.replace(/\D/g, '');
+                // 限制长度为4
+                if (this.value.length > 4) {
+                    this.value = this.value.slice(0, 4);
+                }
+                // 清除错误信息
+                errorMsg.textContent = '';
+            });
+
+            // 自动聚焦
+            setTimeout(() => passwordInput.focus(), 300);
+
+            console.log('kobe.html 已加载 — 地狱入口验证');
+            console.log('🔑 密码: 6230 → 跳转到 kobe2.html');
+
+        })();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>扁渔巴释 · 招聘信息 | 海员岗位</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+        }
+
+        /* ---------- 顶部导航 ---------- */
+        .header {
+            background: #ffffff;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-radius: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            margin-bottom: 20px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+
+        .back-btn {
+            font-size: 22px;
+            cursor: pointer;
+            color: #5f6368;
+            text-decoration: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            transition: background 0.15s;
+            line-height: 1;
+        }
+        .back-btn:hover { background: #f1f3f4; }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        .logo-area .logo-icon {
+            font-size: 24px;
+        }
+        .logo-area .logo-text {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a3a5c;
+        }
+        .logo-area .logo-text span {
+            color: #2d7fc1;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .header-actions span {
+            font-size: 13px;
+            color: #4a5a6a;
+            padding: 5px 14px;
+            border-radius: 20px;
+            cursor: default;
+            background: #f1f3f4;
+            font-weight: 500;
+        }
+
+        /* ---------- 主内容 ---------- */
+        .main-content {
+            max-width: 880px;
+            width: 100%;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        /* 页面标题 */
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e8edf2;
+        }
+        .page-title h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a3a5c;
+        }
+        .page-title .badge {
+            background: #e67e22;
+            color: #fff;
+            font-size: 12px;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 500;
+        }
+
+        /* 招聘卡片 */
+        .job-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px 28px;
+            border: 1px solid #e8edf2;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
+        }
+
+        .job-card .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .job-card .job-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a3a5c;
+        }
+        .job-card .job-title small {
+            font-size: 15px;
+            font-weight: 400;
+            color: #5a7a8a;
+            margin-left: 8px;
+        }
+        .job-card .job-status {
+            background: #27ae60;
+            color: #fff;
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .job-card .job-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px 28px;
+            background: #f5f8fc;
+            padding: 12px 18px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+        }
+        .job-card .job-meta .meta-item {
+            font-size: 14px;
+            color: #4a5a6a;
+        }
+        .job-card .job-meta .meta-item strong {
+            color: #1a3a5c;
+            font-weight: 600;
+        }
+
+        .job-card .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a3a5c;
+            margin: 16px 0 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .job-card .section-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .job-card ul {
+            padding-left: 20px;
+            color: #4a5a6a;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        .job-card ul li {
+            margin-bottom: 2px;
+        }
+
+        .job-card .job-desc {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #4a5a6a;
+        }
+
+        /* ---------- 底部登录区域 ---------- */
+        .login-section {
+            margin-top: 12px;
+            padding: 20px 0 12px 0;
+            border-top: 2px solid #e8edf2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+        .login-section .login-label {
+            font-size: 14px;
+            color: #6a7a8a;
+            letter-spacing: 0.5px;
+        }
+        .login-section .login-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .login-btn {
+            padding: 10px 32px;
+            border: none;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .login-btn:active {
+            transform: scale(0.96);
+        }
+        .login-btn.employee {
+            background: #2d7fc1;
+            color: #ffffff;
+            box-shadow: 0 2px 10px rgba(45, 127, 193, 0.2);
+        }
+        .login-btn.employee:hover {
+            box-shadow: 0 4px 18px rgba(45, 127, 193, 0.3);
+        }
+        .login-btn.admin {
+            background: #e8edf2;
+            color: #3a4a5a;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .login-btn.admin:hover {
+            background: #dce2e8;
+        }
+
+        /* ---------- 底部 ---------- */
+        .footer {
+            text-align: center;
+            padding: 20px 16px 10px;
+            color: #8a9aa8;
+            font-size: 13px;
+            max-width: 880px;
+            margin: 0 auto;
+            width: 100%;
+            border-top: 1px solid #e0e6ec;
+            margin-top: 16px;
+        }
+        .footer span { margin: 0 10px; }
+
+        /* ---------- 登录弹窗 ---------- */
+        .login-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+        .login-modal-overlay.show {
+            display: flex;
+        }
+
+        .login-modal {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 32px 28px 28px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25);
+            animation: fadePop 0.25s ease-out;
+        }
+        @keyframes fadePop {
+            from { opacity: 0; transform: scale(0.95) translateY(12px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .login-modal .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a3a5c;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        .login-modal .modal-sub {
+            font-size: 14px;
+            color: #6a7a8a;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .login-modal .form-group {
+            margin-bottom: 16px;
+        }
+        .login-modal .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2a3a4a;
+            margin-bottom: 4px;
+        }
+        .login-modal .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #dce2e8;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+            background: #f8fafc;
+        }
+        .login-modal .form-group input:focus {
+            border-color: #2d7fc1;
+            background: #ffffff;
+        }
+
+        .login-modal .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .login-modal .form-actions button {
+            flex: 1;
+            padding: 11px 0;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            min-width: 80px;
+        }
+        .login-modal .form-actions button:active {
+            transform: scale(0.96);
+        }
+        .login-modal .form-actions .btn-login {
+            background: #2d7fc1;
+            color: #fff;
+        }
+        .login-modal .form-actions .btn-login:hover {
+            background: #1f6ca8;
+        }
+        .login-modal .form-actions .btn-cancel {
+            background: #e8edf2;
+            color: #4a5a6a;
+        }
+        .login-modal .form-actions .btn-cancel:hover {
+            background: #dce2e8;
+        }
+
+        .login-modal .forgot-link {
+            text-align: center;
+            margin-top: 14px;
+            font-size: 14px;
+            color: #2d7fc1;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.15s;
+        }
+        .login-modal .forgot-link:hover {
+            color: #1a5a8a;
+        }
+
+        .login-modal .error-msg {
+            color: #e74c3c;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 8px;
+            min-height: 20px;
+        }
+
+        /* ---------- 响应式 ---------- */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .header { padding: 10px 14px; }
+            .page-title h1 { font-size: 20px; }
+            .job-card { padding: 18px 16px; }
+            .job-card .job-title { font-size: 19px; }
+            .job-card .job-title small { display: block; margin-left: 0; margin-top: 4px; }
+            .job-card .job-meta { flex-direction: column; gap: 6px; }
+            .login-btn { padding: 8px 24px; font-size: 14px; }
+            .login-modal { padding: 24px 18px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航 -->
+    <div class="header">
+        <a href="zhongzhuanye.html" class="back-btn" title="返回搜索结果">‹</a>
+        <div class="logo-area">
+            <span class="logo-icon">⚓</span>
+            <span class="logo-text">扁渔巴释<span> · 招聘</span></span>
+        </div>
+        <div class="header-actions">
+            <span>📋 岗位</span>
+            <span>📞 联系</span>
+        </div>
+    </div>
+
+    <!-- 主内容 -->
+    <div class="main-content">
+
+        <!-- 页面标题 -->
+        <div class="page-title">
+            <h1>📢 招聘信息</h1>
+            <span class="badge">● 热招中</span>
+        </div>
+
+        <!-- 招聘详情 -->
+        <div class="job-card">
+            <div class="job-header">
+                <div class="job-title">
+                    🚢 海员岗位
+                    <small>— 普通船员 · 多岗位</small>
+                </div>
+                <span class="job-status">● 招聘中</span>
+            </div>
+
+            <div class="job-meta">
+                <span class="meta-item"><strong>📅 发布时间：</strong>2026-07-06</span>
+                <span class="meta-item"><strong>📍 工作地点：</strong>上海 · 国际航线</span>
+                <span class="meta-item"><strong>📋 招聘人数：</strong>15 人</span>
+                <span class="meta-item"><strong>⏳ 截止日期：</strong>2026-08-20</span>
+            </div>
+
+            <div class="section-title">📌 岗位职责</div>
+            <ul>
+                <li>负责船舶日常航行值班，协助驾驶台瞭望与操舵</li>
+                <li>参与船舶甲板设备的维护与保养工作</li>
+                <li>执行货物的系固、装卸及检查任务</li>
+                <li>遵守公司安全管理体系，参与应急演练</li>
+            </ul>
+
+            <div class="section-title">✅ 任职要求</div>
+            <ul>
+                <li>持有有效的海员证及相关适任证书</li>
+                <li>有航海经验者优先，应届毕业生亦可</li>
+                <li>具备良好的团队协作能力和安全意识</li>
+                <li>身体健康，能适应长期海上工作环境</li>
+            </ul>
+
+            <div class="section-title">💰 薪资福利</div>
+            <ul>
+                <li>月薪 12,000 - 18,000 元（根据资历及岗位定级）</li>
+                <li>提供全面的海上保险及意外保障</li>
+                <li>船上免费食宿，定期发放生活用品</li>
+                <li>良好的晋升通道与培训机会</li>
+            </ul>
+
+            <div class="section-title">📩 应聘方式</div>
+            <div class="job-desc">
+                请将个人简历、海员证及相关证书扫描件发送至招聘邮箱：<strong>2528419055@qq.com</strong><br>
+                邮件标题请注明“应聘海员岗位 + 姓名”。符合条件者将在 5 个工作日内收到面试通知。
+            </div>
+        </div>
+
+        <!-- 底部登录入口 -->
+        <div class="login-section">
+            <div class="login-label">🔐 系统入口</div>
+            <div class="login-buttons">
+                <a href="#" class="login-btn employee" onclick="openLoginModal('员工')">👤 以员工身份登录</a>
+                <a href="#" class="login-btn admin" onclick="openLoginModal('管理员')">⚙️ 以管理员身份登录</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+        <span>© 2026 扁渔巴释海洋运输公司</span>
+        <span>•</span>
+        <span>📋 招聘 · 海员岗位</span>
+        <span>•</span>
+        <span>🌊 加入我们，驶向未来</span>
+    </div>
+
+    <!-- ====== 登录弹窗 ====== -->
+    <div class="login-modal-overlay" id="loginModal">
+        <div class="login-modal">
+            <div class="modal-title">🔐 登录</div>
+            <div class="modal-sub" id="loginRoleLabel">以「员工」身份登录</div>
+
+            <div class="form-group">
+                <label for="loginUsername">👤 账号</label>
+                <input type="text" id="loginUsername" placeholder="请输入账号" autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label for="loginPassword">🔑 密码</label>
+                <input type="password" id="loginPassword" placeholder="请输入密码" autocomplete="off">
+            </div>
+
+            <div class="error-msg" id="loginError"></div>
+
+            <div class="form-actions">
+                <button class="btn-login" onclick="handleLogin()">登 录</button>
+                <button class="btn-cancel" onclick="closeLoginModal()">取 消</button>
+            </div>
+
+            <div class="forgot-link" onclick="showForgotHint()">🔓 忘记密码和账号？</div>
+        </div>
+    </div>
+
+    <script>
+        // ---------- 登录弹窗控制 ----------
+        let currentRole = '员工';
+
+        function openLoginModal(role) {
+            currentRole = role;
+            document.getElementById('loginRoleLabel').textContent = '以「' + role + '」身份登录';
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginError').textContent = '';
+            document.getElementById('loginModal').classList.add('show');
+            setTimeout(() => document.getElementById('loginUsername').focus(), 100);
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('show');
+            document.getElementById('loginError').textContent = '';
+        }
+
+        document.getElementById('loginModal').addEventListener('click', function(e) {
+            if (e.target === this) closeLoginModal();
+        });
+
+        function showForgotHint() {
+            alert('🔓 初始账号为员工或管理者的姓名拼音\n\n📅 密码为员工或管理者的生日\n');
+        }
+
+        // ---------- 登录处理 ----------
+        function handleLogin() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const errorEl = document.getElementById('loginError');
+
+            errorEl.textContent = '';
+
+            // ----- 账号验证 -----
+            // 1. 张子轩 → zhangzixuan.html
+            if (username === 'zhangzixuan' && password === '20050404') {
+                closeLoginModal();
+                window.location.href = 'zhangzixuan.html';
+                return;
+            }
+
+            // 2. 路景川 → lujingchuan.html (新增)
+            if (username === '122276440' && password === '19890906') {
+                closeLoginModal();
+                window.location.href = 'lujingchuan.html';
+                return;
+            }
+
+            // 其他情况：提示错误
+            errorEl.textContent = '❌ 账号或密码错误，请重新输入';
+            document.getElementById('loginUsername').focus();
+            document.getElementById('loginUsername').select();
+        }
+
+        // ---------- 回车键支持 ----------
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.getElementById('loginModal').classList.contains('show')) {
+                e.preventDefault();
+                handleLogin();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('loginModal').classList.contains('show')) {
+                closeLoginModal();
+            }
+        });
+
+        console.log('linbus2.html 已加载 — 扁渔巴释招聘信息');
+        console.log('💡 底部提供「员工登录」和「管理员登录」入口');
+        console.log('🔑 测试账号1: zhangzixuan / 20050404 → zhangzixuan.html');
+        console.log('🔑 测试账号2: 122276440 / 19890906 → lujingchuan.html');
+    </script>
+
+</body>
+</html>

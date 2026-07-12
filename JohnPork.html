@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>John Pork · 通话</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: #ededed;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 顶部标题栏 */
+        .header {
+            background-color: #ffffff;
+            padding: 16px 16px 12px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding-top: 44px;
+            flex-shrink: 0;
+        }
+        .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 12px;
+            color: #333;
+            text-decoration: none;
+            line-height: 1;
+        }
+        .back-btn:active { opacity: 0.5; }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            flex-shrink: 0;
+            background-color: #ddd;
+            position: relative;
+        }
+        .user-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .user-name {
+            margin-left: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            letter-spacing: 0.5px;
+        }
+        .user-name small {
+            font-weight: 400;
+            font-size: 13px;
+            color: #999;
+            margin-left: 6px;
+        }
+
+        /* 聊天内容区域 */
+        .chat-area {
+            flex: 1;
+            padding: 16px 16px 8px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background-color: #ededed;
+        }
+
+        /* 消息气泡 */
+        .message {
+            max-width: 78%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.5;
+            word-break: break-word;
+            position: relative;
+            animation: fadeIn 0.25s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 对方（John Pork）— 白色气泡，左对齐 */
+        .message.john {
+            align-self: flex-start;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        /* 自己（多分、風。）— 绿色气泡，右对齐 */
+        .message.me {
+            align-self: flex-end;
+            background-color: #07c160;
+            color: #ffffff;
+            border-bottom-right-radius: 4px;
+        }
+
+        /* 时间戳 */
+        .timestamp {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+            text-align: right;
+            padding-right: 4px;
+        }
+        .message.john .timestamp {
+            text-align: left;
+            color: #aaa;
+        }
+
+        /* 图片容器 — 居中显示 */
+        .image-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px 0;
+            animation: fadeIn 0.5s ease;
+            background: transparent;
+        }
+        .image-container img {
+            max-width: 85%;
+            max-height: 320px;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+            background: #ddd;
+            object-fit: contain;
+        }
+        .image-caption {
+            font-size: 13px;
+            color: #888;
+            text-align: center;
+            font-style: italic;
+            background: rgba(255,255,255,0.6);
+            padding: 4px 16px;
+            border-radius: 20px;
+        }
+
+        /* 底部输入区域 */
+        .input-area {
+            background: #ffffff;
+            padding: 10px 16px 20px;
+            border-top: 1px solid #e5e5e5;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* 选项按钮容器 */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+        .option-btn {
+            background: #f7f7f7;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 15px;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+            text-align: left;
+            font-weight: 500;
+        }
+        .option-btn:active {
+            background: #e8e8e8;
+            border-color: #bbb;
+        }
+        .option-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f0f0f0;
+        }
+
+        /* 聊天结束遮罩 */
+        .chat-ended-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        .chat-ended-overlay.show {
+            display: flex;
+        }
+        .chat-ended-box {
+            background: #fff;
+            padding: 30px 40px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 300px;
+            width: 90%;
+        }
+        .chat-ended-box small {
+            font-weight: 400;
+            font-size: 14px;
+            color: #999;
+            display: block;
+            margin-top: 6px;
+        }
+        .chat-ended-box .home-btn {
+            margin-top: 16px;
+            background: #07c160;
+            color: white;
+            border: none;
+            padding: 10px 0;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .chat-ended-box .home-btn:active { background: #06a050; }
+
+        /* 自定义弹窗 */
+        .custom-alert-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        .custom-alert-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .custom-alert-box {
+            background: #ffffff;
+            width: 280px;
+            border-radius: 16px;
+            padding: 24px 20px 20px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .custom-alert-box h3 { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+        .custom-alert-box p { font-size: 14px; color: #666; margin-bottom: 20px; }
+        .custom-alert-box button {
+            background: #07c160; color: white; border: none;
+            padding: 10px 0; width: 100%; border-radius: 8px;
+            font-size: 16px; font-weight: 500; cursor: pointer;
+        }
+        .custom-alert-box button:active { background: #06a050; }
+
+        /* 底部输入框占位 */
+        .input-placeholder {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .input-placeholder input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 24px;
+            font-size: 15px;
+            outline: none;
+            background: #f7f7f7;
+        }
+        .input-placeholder input:disabled {
+            background: #e8e8e8;
+            color: #aaa;
+        }
+        .send-btn {
+            background: #07c160;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 24px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .send-btn:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+        .send-btn:active:not(:disabled) { background: #06a050; }
+
+        /* 小屏适配 */
+        @media (max-width: 420px) {
+            .message { max-width: 88%; font-size: 14px; }
+            .option-btn { font-size: 14px; padding: 10px 14px; }
+            .image-container img { max-width: 95%; max-height: 250px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部标题栏 -->
+    <div class="header">
+        <a href="qq.html" class="back-btn" id="backBtn">‹</a>
+        <div class="user-avatar">
+            <img src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEXCXNqUoQdpBBc_2-1J5n0KRHIvXukGAACFyUAAnbMmFaotNKgpcxyajwE.jpg" alt="John Pork">
+        </div>
+        <div class="user-name">
+            John Pork
+            <small>📞 通话中</small>
+        </div>
+    </div>
+
+    <!-- 聊天区域 -->
+    <div class="chat-area" id="chatArea">
+        <!-- 消息会由 JavaScript 动态渲染 -->
+    </div>
+
+    <!-- 输入区域（含选项按钮） -->
+    <div class="input-area" id="inputArea">
+        <div class="options-container" id="optionsContainer">
+            <!-- 选项按钮由 JS 动态生成 -->
+        </div>
+        <div class="input-placeholder">
+            <input type="text" placeholder="输入消息..." disabled id="chatInput">
+            <button class="send-btn" disabled id="sendBtn">发送</button>
+        </div>
+    </div>
+
+    <!-- 聊天结束遮罩 -->
+    <div class="chat-ended-overlay" id="chatEndedOverlay">
+        <div class="chat-ended-box">
+            🛑 通话已结束
+            <small>John Pork 已挂断</small>
+            <button class="home-btn" id="homeBtn">🏠 回到主页</button>
+        </div>
+    </div>
+
+    <!-- 自定义弹窗 -->
+    <div class="custom-alert-overlay" id="alertOverlay">
+        <div class="custom-alert-box">
+            <h3>📞 提示</h3>
+            <p id="alertMessage">什么也没有发生</p>
+            <button onclick="closeAlert()">我知道了</button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- 工具函数 ----------
+            function randomDate(start, end) {
+                const d = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                const hours = String(d.getHours()).padStart(2, '0');
+                const minutes = String(d.getMinutes()).padStart(2, '0');
+                return `${month}-${day} ${hours}:${minutes}`;
+            }
+
+            // 锚点：2026年4月1日 ~ 2026年7月31日
+            const START = new Date(2026, 3, 1);
+            const END = new Date(2026, 6, 31);
+
+            // John Pork 的日常对话（中文）
+            const johnMessages = [
+                "嘿！最近怎么样啊？🐷",
+                "我一直在想你的事呢。",
+                "你知道吗，我可不是普通的猪，我是个传奇。",
+                "你看到我最近的照片了吗？",
+                "我正在筹划一件大事，等着瞧吧！",
+                "做John Pork的感觉真不错。",
+                "你应该找个时间来找我玩。",
+                "我在世界各地都有关系网。",
+                "相信我，我知道什么对你是最好的。",
+                "咱们保持联系，好吗？😉",
+                "今天天气真不错，适合出去走走。",
+                "我最近在学中文，说得怎么样？",
+                "你是我最喜欢的人类朋友之一。",
+                "要不要听听我最近的冒险故事？",
+                "记住，永远不要放弃你的梦想！"
+            ];
+
+            // ---------- 状态 ----------
+            let chatEnded = false;
+            let optionsChosen = false;
+            let messageCount = 0;
+            let imageDisplayed = false;
+
+            // DOM 元素
+            const chatArea = document.getElementById('chatArea');
+            const optionsContainer = document.getElementById('optionsContainer');
+            const chatInput = document.getElementById('chatInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const chatEndedOverlay = document.getElementById('chatEndedOverlay');
+            const alertOverlay = document.getElementById('alertOverlay');
+            const alertMessage = document.getElementById('alertMessage');
+            const homeBtn = document.getElementById('homeBtn');
+
+            // ---------- 渲染消息 ----------
+            function addMessage(text, sender, timestamp) {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `message ${sender}`;
+                msgDiv.innerHTML = `${text}<div class="timestamp">${timestamp}</div>`;
+                chatArea.appendChild(msgDiv);
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+
+            function addSystemMessage(text) {
+                const div = document.createElement('div');
+                div.style.cssText = `
+                    text-align: center; font-size: 13px; color: #999;
+                    padding: 6px 0; font-style: italic;
+                `;
+                div.textContent = text;
+                chatArea.appendChild(div);
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+
+            // ---------- 显示图片（居中） ----------
+            function displayImage() {
+                if (imageDisplayed) return;
+                imageDisplayed = true;
+
+                const container = document.createElement('div');
+                container.className = 'image-container';
+
+                const img = document.createElement('img');
+                img.src = 'https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEXCm9qUqco8JurY5tpEbwmg-WjBBGxygACGiYAAnbMmFazTUbzqUgZoDwE.jpg';
+                img.alt = 'John Pork 来电';
+                img.loading = 'lazy';
+
+                const caption = document.createElement('div');
+                caption.className = 'image-caption';
+                caption.textContent = '📱 John Pork 正在呼叫你...';
+
+                container.appendChild(img);
+                container.appendChild(caption);
+                chatArea.appendChild(container);
+                chatArea.scrollTop = chatArea.scrollHeight;
+
+                // 图片加载完成后显示选项
+                img.onload = function() {
+                    showOptions();
+                };
+                img.onerror = function() {
+                    // 即使图片加载失败，也显示选项
+                    showOptions();
+                };
+
+                // 如果图片已经缓存，onload可能不会触发，设置一个安全定时器
+                setTimeout(() => {
+                    if (!optionsChosen && !chatEnded) {
+                        showOptions();
+                    }
+                }, 3000);
+            }
+
+            // ---------- 生成随机日常对话 ----------
+            function generateDailyMessages(count) {
+                const shuffled = [...johnMessages].sort(() => Math.random() - 0.5);
+                return shuffled.slice(0, count);
+            }
+
+            let dailyQueue = [];
+            let isSendingDaily = false;
+
+            function sendNextDaily() {
+                if (chatEnded || dailyQueue.length === 0 || optionsChosen || imageDisplayed) {
+                    isSendingDaily = false;
+                    return;
+                }
+                isSendingDaily = true;
+                const text = dailyQueue.shift();
+                const time = randomDate(START, END);
+                addMessage(text, 'john', time);
+                messageCount++;
+
+                if (dailyQueue.length === 0 && !optionsChosen && !chatEnded && !imageDisplayed) {
+                    // 日常对话结束，显示图片
+                    setTimeout(() => {
+                        if (!chatEnded && !optionsChosen) {
+                            displayImage();
+                        }
+                    }, 600);
+                }
+                isSendingDaily = false;
+
+                if (dailyQueue.length > 0 && !optionsChosen && !chatEnded && !imageDisplayed) {
+                    setTimeout(sendNextDaily, 1200 + Math.random() * 800);
+                }
+            }
+
+            function startDailyChat() {
+                if (chatEnded) return;
+                const count = 3 + Math.floor(Math.random() * 2);
+                const msgs = generateDailyMessages(count);
+                dailyQueue = msgs;
+                optionsContainer.innerHTML = '';
+                optionsChosen = false;
+                imageDisplayed = false;
+
+                setTimeout(() => {
+                    if (!chatEnded && !optionsChosen) {
+                        sendNextDaily();
+                    }
+                }, 500);
+            }
+
+            // ---------- 显示选项 ----------
+            function showOptions() {
+                if (chatEnded || optionsChosen) return;
+                optionsChosen = true;
+
+                optionsContainer.innerHTML = '';
+
+                const btn1 = document.createElement('button');
+                btn1.className = 'option-btn';
+                btn1.textContent = '📵 挂断电话';
+                btn1.addEventListener('click', function() {
+                    if (chatEnded) return;
+                    handleOption1();
+                });
+
+                const btn2 = document.createElement('button');
+                btn2.className = 'option-btn';
+                btn2.textContent = '📞 我去我去，John Pork给我打电话了，接一下！';
+                btn2.addEventListener('click', function() {
+                    if (chatEnded) return;
+                    handleOption2();
+                });
+
+                optionsContainer.appendChild(btn1);
+                optionsContainer.appendChild(btn2);
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+
+            // ---------- 处理选项1：挂断电话 ----------
+            function handleOption1() {
+                if (chatEnded) return;
+                document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+
+                const time1 = randomDate(START, END);
+                addMessage('挂断电话。', 'me', time1);
+
+                setTimeout(() => {
+                    if (chatEnded) return;
+                    addSystemMessage('📵 通话已挂断');
+
+                    setTimeout(() => {
+                        showAlert('什么也没有发生');
+                        setTimeout(() => {
+                            endChat();
+                        }, 400);
+                    }, 600);
+                }, 600);
+            }
+
+            // ---------- 处理选项2：接听电话 ----------
+            function handleOption2() {
+                if (chatEnded) return;
+                document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+
+                const time1 = randomDate(START, END);
+                addMessage('我去我去，John Pork给我打电话了，接一下！📞', 'me', time1);
+
+                setTimeout(() => {
+                    if (chatEnded) return;
+                    const time2 = randomDate(START, END);
+                    addMessage('嘿！很高兴你接电话了！😄', 'john', time2);
+
+                    // 跳转到 Theend5.html
+                    setTimeout(() => {
+                        window.location.href = 'Theend5.html';
+                    }, 800);
+                }, 800);
+            }
+
+            // ---------- 结束聊天 ----------
+            function endChat() {
+                if (chatEnded) return;
+                chatEnded = true;
+                chatInput.disabled = true;
+                sendBtn.disabled = true;
+                document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+                addSystemMessage('💬 聊天已结束');
+
+                chatEndedOverlay.classList.add('show');
+            }
+
+            // ---------- 弹窗 ----------
+            function showAlert(msg) {
+                alertMessage.textContent = msg || '什么也没有发生';
+                alertOverlay.classList.add('show');
+            }
+            window.closeAlert = function() {
+                alertOverlay.classList.remove('show');
+            };
+            alertOverlay.addEventListener('click', function(e) {
+                if (e.target === this) closeAlert();
+            });
+
+            // ---------- 回到主页 ----------
+            homeBtn.addEventListener('click', function() {
+                window.location.href = 'qq.html';
+            });
+
+            document.getElementById('backBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.href = 'qq.html';
+            });
+
+            // ---------- 初始化 ----------
+            function initChat() {
+                chatArea.innerHTML = '';
+                startDailyChat();
+            }
+
+            initChat();
+            window.closeAlert = closeAlert;
+            console.log('JohnPork.html 已加载 — John Pork 通话');
+        })();
+    </script>
+
+</body>
+</html>

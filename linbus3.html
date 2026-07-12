@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>扁渔巴释 · 新闻与动态</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+        }
+
+        /* ---------- 顶部导航 ---------- */
+        .header {
+            background: #ffffff;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-radius: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            margin-bottom: 20px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+
+        .back-btn {
+            font-size: 22px;
+            cursor: pointer;
+            color: #5f6368;
+            text-decoration: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            transition: background 0.15s;
+            line-height: 1;
+        }
+        .back-btn:hover { background: #f1f3f4; }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        .logo-area .logo-icon {
+            font-size: 24px;
+        }
+        .logo-area .logo-text {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a3a5c;
+        }
+        .logo-area .logo-text span {
+            color: #2d7fc1;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .header-actions span {
+            font-size: 13px;
+            color: #4a5a6a;
+            padding: 5px 14px;
+            border-radius: 20px;
+            cursor: default;
+            background: #f1f3f4;
+            font-weight: 500;
+        }
+
+        /* ---------- 主内容 ---------- */
+        .main-content {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        /* 页面标题 */
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e8edf2;
+        }
+        .page-title h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a3a5c;
+        }
+        .page-title .badge {
+            background: #2d7fc1;
+            color: #fff;
+            font-size: 12px;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 500;
+        }
+
+        /* 新闻卡片 */
+        .news-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 22px 26px;
+            border: 1px solid #e8edf2;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
+            transition: box-shadow 0.2s;
+        }
+        .news-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        .news-card .news-date {
+            font-size: 13px;
+            color: #7a8a9a;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .news-card .news-date .tag {
+            background: #e8edf2;
+            padding: 0 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            color: #4a5a6a;
+        }
+        .news-card .news-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1a3a5c;
+            margin-bottom: 8px;
+        }
+        .news-card .news-summary {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #4a5a6a;
+        }
+
+        /* 船员列表 */
+        .crew-section {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px dashed #dce2e8;
+        }
+        .crew-section .crew-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a3a5c;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .crew-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px 16px;
+        }
+        .crew-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: #f5f8fc;
+            border-radius: 30px;
+            font-size: 14px;
+            color: #2a4a6a;
+            border: 1px solid #e8edf2;
+        }
+        .crew-item .crew-emoji {
+            font-size: 18px;
+        }
+        .crew-item .crew-role {
+            font-size: 12px;
+            color: #6a7a8a;
+            margin-left: 2px;
+        }
+        .crew-item .crew-name {
+            font-weight: 500;
+        }
+
+        /* 其他动态 */
+        .other-news {
+            margin-top: 6px;
+        }
+        .other-news .other-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a3a5c;
+            margin-bottom: 12px;
+        }
+        .other-news ul {
+            list-style: none;
+            padding: 0;
+        }
+        .other-news ul li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eef2f6;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #4a5a6a;
+        }
+        .other-news ul li:last-child {
+            border-bottom: none;
+        }
+        .other-news ul li .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #2d7fc1;
+            flex-shrink: 0;
+        }
+        .other-news ul li .time {
+            font-size: 12px;
+            color: #8a9aaa;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        /* ---------- 底部 ---------- */
+        .footer {
+            text-align: center;
+            padding: 20px 16px 10px;
+            color: #8a9aa8;
+            font-size: 13px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            border-top: 1px solid #e0e6ec;
+            margin-top: 24px;
+        }
+        .footer span { margin: 0 10px; }
+
+        /* ---------- 响应式 ---------- */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .header { padding: 10px 14px; }
+            .page-title h1 { font-size: 20px; }
+            .news-card { padding: 16px 18px; }
+            .crew-grid { grid-template-columns: 1fr 1fr; }
+            .crew-item { font-size: 13px; padding: 5px 10px; }
+        }
+        @media (max-width: 400px) {
+            .crew-grid { grid-template-columns: 1fr; }
+            .other-news ul li { flex-wrap: wrap; }
+            .other-news ul li .time { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航 -->
+    <div class="header">
+        <a href="zhongzhuanye.html" class="back-btn" title="返回搜索结果">‹</a>
+        <div class="logo-area">
+            <span class="logo-icon">📰</span>
+            <span class="logo-text">扁渔巴释<span> · 新闻动态</span></span>
+        </div>
+        <div class="header-actions">
+            <span>📅 最近</span>
+            <span>🔔 订阅</span>
+        </div>
+    </div>
+
+    <!-- 主内容 -->
+    <div class="main-content">
+
+        <!-- 页面标题 -->
+        <div class="page-title">
+            <h1>📬 公司动态</h1>
+            <span class="badge">最新</span>
+        </div>
+
+        <!-- 主要新闻：出海货船 -->
+        <div class="news-card">
+            <div class="news-date">
+                <span>📆 2026-07-08</span>
+                <span class="tag">🚢 航行中</span>
+            </div>
+            <div class="news-title">「扁渔巴释号」货船近日启航，奔赴东南亚航线</div>
+            <div class="news-summary">
+                扁渔巴释海洋运输公司旗下货船「扁渔巴释号」已于近日从上海港启航，满载货物前往东南亚各主要港口。
+                本次航程预计历时约25天，途经新加坡、马来西亚、印度尼西亚等地。船上配备了经验丰富的船员团队，
+                确保航行安全与货物准时送达。
+            </div>
+
+            <!-- 船员介绍 -->
+            <div class="crew-section">
+                <div class="crew-label">
+                    👨‍✈️ 本次航程部分成员
+                    <span style="font-size:12px;font-weight:400;color:#7a8a9a;">（部分介绍）</span>
+                </div>
+                <div class="crew-grid">
+                    <div class="crew-item">
+                        <span class="crew-emoji">🧑‍✈️</span>
+                        <span class="crew-name">路景川</span>
+                        <span class="crew-role">· 船长</span>
+                    </div>
+                    <div class="crew-item">
+                        <span class="crew-emoji">🧑‍✈️</span>
+                        <span class="crew-name">陈梓华</span>
+                        <span class="crew-role">· 副船长</span>
+                    </div>
+                    <div class="crew-item">
+                        <span class="crew-emoji">⚙️</span>
+                        <span class="crew-name">陈子华</span>
+                        <span class="crew-role">· 工程师</span>
+                    </div>
+                    <div class="crew-item">
+                        <span class="crew-emoji">🩺</span>
+                        <span class="crew-name">李星林</span>
+                        <span class="crew-role">· 船医</span>
+                    </div>
+                    <div class="crew-item">
+                        <span class="crew-emoji">⚓</span>
+                        <span class="crew-name">张子轩</span>
+                        <span class="crew-role">· 普通船员</span>
+                    </div>
+                    <div class="crew-item">
+                        <span class="crew-emoji">⚓</span>
+                        <span class="crew-name">李雪峰</span>
+                        <span class="crew-role">· 普通船员</span>
+                    </div>
+                    <div class="crew-item">
+                        <span class="crew-emoji">🍳</span>
+                        <span class="crew-name">黄博浩</span>
+                        <span class="crew-role">· 厨师</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 其他动态 -->
+        <div class="other-news">
+            <div class="other-title">📌 近期其他动态</div>
+            <ul>
+                <li>
+                    <span class="dot"></span>
+                    公司新增3条东南亚航线，运力提升20%
+                    <span class="time">2026-07-05</span>
+                </li>
+                <li>
+                    <span class="dot"></span>
+                    「扁渔巴释号」完成年度检修，顺利通过安全认证
+                    <span class="time">2026-06-28</span>
+                </li>
+                <li>
+                    <span class="dot"></span>
+                    公司与新加坡港口签署长期合作协议
+                    <span class="time">2026-06-20</span>
+                </li>
+                <li>
+                    <span class="dot"></span>
+                    海上救援演练顺利完成，全体船员表现优异
+                    <span class="time">2026-06-12</span>
+                </li>
+                <li>
+                    <span class="dot"></span>
+                    扁渔巴释海洋运输公司获评“年度诚信航运企业”
+                    <span class="time">2026-06-05</span>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+        <span>© 2026 扁渔巴释海洋运输公司</span>
+        <span>•</span>
+        <span>📰 新闻动态 · 持续更新</span>
+        <span>•</span>
+        <span>🌊 航运 · 连接世界</span>
+    </div>
+
+    <script>
+        console.log('linbus3.html 已加载 — 扁渔巴释新闻与动态');
+        console.log('🚢 货船「扁渔巴释号」船员名单已加载');
+    </script>
+
+</body>
+</html>

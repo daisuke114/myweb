@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>备忘录 · 张子轩</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+        }
+
+        /* ---------- 顶部导航 ---------- */
+        .header {
+            background: #ffffff;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-radius: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            margin-bottom: 20px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+
+        .back-btn {
+            font-size: 22px;
+            cursor: pointer;
+            color: #5f6368;
+            text-decoration: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            transition: background 0.15s;
+            line-height: 1;
+        }
+        .back-btn:hover { background: #f1f3f4; }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        .logo-area .logo-icon {
+            font-size: 24px;
+        }
+        .logo-area .logo-text {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a3a5c;
+        }
+        .logo-area .logo-text span {
+            color: #2d7fc1;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .header-actions span {
+            font-size: 13px;
+            color: #4a5a6a;
+            padding: 5px 14px;
+            border-radius: 20px;
+            cursor: default;
+            background: #f1f3f4;
+            font-weight: 500;
+        }
+
+        /* ---------- 主内容 ---------- */
+        .main-content {
+            max-width: 820px;
+            width: 100%;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* 页面标题 */
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e8edf2;
+        }
+        .page-title h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a3a5c;
+        }
+        .page-title .badge {
+            background: #8a9aaa;
+            color: #fff;
+            font-size: 12px;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 500;
+        }
+
+        /* 备忘录卡片 */
+        .memo-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 20px 24px;
+            border: 1px solid #e8edf2;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
+            transition: box-shadow 0.2s;
+            position: relative;
+        }
+        .memo-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        .memo-card .memo-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a3a5c;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .memo-card .memo-title .memo-number {
+            background: #e8edf2;
+            color: #4a5a6a;
+            font-size: 12px;
+            padding: 0 10px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        .memo-card .memo-date {
+            font-size: 12px;
+            color: #8a9aaa;
+            margin-bottom: 10px;
+        }
+        .memo-card .memo-content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #3a4a5a;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .memo-card .memo-content .interrupt {
+            color: #e67e22;
+            font-weight: 600;
+        }
+        .memo-card .memo-content .highlight {
+            background: #fef9e7;
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+        .memo-card .memo-content .angry {
+            color: #e74c3c;
+            font-weight: 500;
+        }
+        .memo-card .memo-content .calm {
+            color: #2d7fc1;
+            font-weight: 500;
+        }
+
+        /* 装饰分隔线 */
+        .memo-divider {
+            text-align: center;
+            color: #d0d8e0;
+            font-size: 18px;
+            letter-spacing: 8px;
+            padding: 4px 0;
+            user-select: none;
+        }
+
+        /* 底部 */
+        .footer {
+            text-align: center;
+            padding: 20px 16px 10px;
+            color: #8a9aa8;
+            font-size: 13px;
+            max-width: 820px;
+            margin: 0 auto;
+            width: 100%;
+            border-top: 1px solid #e0e6ec;
+            margin-top: 20px;
+        }
+        .footer span { margin: 0 10px; }
+
+        /* ---------- 响应式 ---------- */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .header { padding: 10px 14px; }
+            .page-title h1 { font-size: 20px; }
+            .memo-card { padding: 16px 18px; }
+            .memo-card .memo-content { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航 -->
+    <div class="header">
+        <a href="zhangzixuan.html" class="back-btn" title="返回员工中心">‹</a>
+        <div class="logo-area">
+            <span class="logo-icon">📝</span>
+            <span class="logo-text">备忘录<span> · 张子轩</span></span>
+        </div>
+        <div class="header-actions">
+            <span>📋 全部</span>
+            <span>📅 最近</span>
+        </div>
+    </div>
+
+    <!-- 主内容 -->
+    <div class="main-content">
+
+        <!-- 页面标题 -->
+        <div class="page-title">
+            <h1>📖 我的备忘录</h1>
+            <span class="badge">3 篇</span>
+        </div>
+
+        <!-- 记录1 -->
+        <div class="memo-card">
+            <div class="memo-title">
+                <span>记录 1</span>
+                <span class="memo-number">入职日</span>
+            </div>
+            <div class="memo-date">📅 2026-05-15</div>
+            <div class="memo-content">
+今天，我入职了这家公司，无论是待遇还是薪水都很符合我的要求，并且，和我一起入职的还有我的高中同学，李雪峰。我十分开心和他再见面，我希望能在船上和他好好相处。
+            </div>
+        </div>
+
+        <!-- 记录2 -->
+        <div class="memo-card">
+            <div class="memo-title">
+                <span>记录 2</span>
+                <span class="memo-number">第一个月</span>
+            </div>
+            <div class="memo-date">📅 2026-06-15</div>
+            <div class="memo-content">
+今天是我入职的第一个月，听说就快要迎来我的第一次工作了，我十分期待......<span class="interrupt"></span>
+
+在过了三天后，我见到了与我同行的其他人，船长看上去有些凶巴巴的，我总感觉有些不安......并且，我闻到了一些......酒味？那个船长喜欢酗酒吗？我该注意一些了，也该提醒一下李雪峰。（2026-06-18）
+            </div>
+        </div>
+
+        <!-- 记录3 -->
+        <div class="memo-card">
+            <div class="memo-title">
+                <span>记录 3</span>
+                <span class="memo-number">最后一天</span>
+            </div>
+            <div class="memo-date">📅 2026-06-20</div>
+            <div class="memo-content">
+最后一天了，我终于完成了他们让我做的那些心理评估......他们告诉我：<span class="highlight">"看起来你的心理状况还不错，但你最好多休息。"</span>
+
+这难道是我的错吗！他们只需要告诉我<span class="angry">"是"</span>或者<span class="angry">"否"</span>就可以了！我不该这么愤怒的......也许我真的没休息好，我完全可以控制我的情绪。对，没错......就像我以前做的那样......<span class="calm">深呼吸......工作要开始了。</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+        <span>© 2026 扁渔巴释海洋运输公司</span>
+        <span>•</span>
+        <span>📝 张子轩 · 备忘录</span>
+        <span>•</span>
+        <span>🌊 记录 · 反思 · 成长</span>
+    </div>
+
+    <script>
+        console.log('zhangzixuan2.html 已加载 — 备忘录');
+        console.log('📖 共 3 篇记录，记录了入职以来的心理变化');
+    </script>
+
+</body>
+</html>

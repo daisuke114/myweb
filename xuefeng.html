@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>李雪峰 · 聊天</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: #ededed;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 顶部标题栏 */
+        .header {
+            background-color: #ffffff;
+            padding: 16px 16px 12px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding-top: 44px;
+            flex-shrink: 0;
+        }
+        .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 12px;
+            color: #333;
+            text-decoration: none;
+            line-height: 1;
+        }
+        .back-btn:active { opacity: 0.5; }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            flex-shrink: 0;
+            background-color: #ddd;
+            position: relative;
+        }
+        .user-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .user-name {
+            margin-left: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            letter-spacing: 0.5px;
+        }
+        .user-name small {
+            font-weight: 400;
+            font-size: 13px;
+            color: #999;
+            margin-left: 6px;
+        }
+
+        /* 聊天内容区域 */
+        .chat-area {
+            flex: 1;
+            padding: 16px 16px 8px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background-color: #ededed;
+        }
+
+        /* 消息气泡 */
+        .message {
+            max-width: 78%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.5;
+            word-break: break-word;
+            position: relative;
+            animation: fadeIn 0.25s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 对方（李雪峰）— 白色气泡，左对齐 */
+        .message.xuefeng {
+            align-self: flex-start;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        /* 自己（多分、風。）— 绿色气泡，右对齐 */
+        .message.me {
+            align-self: flex-end;
+            background-color: #07c160;
+            color: #ffffff;
+            border-bottom-right-radius: 4px;
+        }
+
+        /* 时间戳 */
+        .timestamp {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+            text-align: right;
+            padding-right: 4px;
+        }
+        .message.xuefeng .timestamp {
+            text-align: left;
+            color: #aaa;
+        }
+
+        /* 底部输入区域 */
+        .input-area {
+            background: #ffffff;
+            padding: 10px 16px 20px;
+            border-top: 1px solid #e5e5e5;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* 选项按钮容器 */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+        .option-btn {
+            background: #f7f7f7;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 15px;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+            text-align: left;
+            font-weight: 500;
+        }
+        .option-btn:active {
+            background: #e8e8e8;
+            border-color: #bbb;
+        }
+        .option-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f0f0f0;
+        }
+
+        /* 底部输入框占位 */
+        .input-placeholder {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .input-placeholder input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 24px;
+            font-size: 15px;
+            outline: none;
+            background: #f7f7f7;
+        }
+        .input-placeholder input:disabled {
+            background: #e8e8e8;
+            color: #aaa;
+        }
+        .send-btn {
+            background: #07c160;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 24px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .send-btn:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+        .send-btn:active:not(:disabled) { background: #06a050; }
+
+        /* 小屏适配 */
+        @media (max-width: 420px) {
+            .message { max-width: 88%; font-size: 14px; }
+            .option-btn { font-size: 14px; padding: 10px 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部标题栏 -->
+    <div class="header">
+        <a href="qq.html" class="back-btn" id="backBtn">‹</a>
+        <div class="user-avatar">
+            <img src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEW_BpqURZeJfGXlltzk_TCEk3pyC4JGAACoC0AAgvDiFb0_r5KmjclcjwE.jpg" alt="李雪峰">
+        </div>
+        <div class="user-name">
+            李雪峰
+            <small>🏃 在线</small>
+        </div>
+    </div>
+
+    <!-- 聊天区域 -->
+    <div class="chat-area" id="chatArea">
+        <!-- 消息会由 JavaScript 动态渲染 -->
+    </div>
+
+    <!-- 输入区域（含选项按钮） -->
+    <div class="input-area" id="inputArea">
+        <div class="options-container" id="optionsContainer">
+            <!-- 选项按钮由 JS 动态生成 -->
+        </div>
+        <div class="input-placeholder">
+            <input type="text" placeholder="输入消息..." disabled id="chatInput">
+            <button class="send-btn" disabled id="sendBtn">发送</button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- 工具函数 ----------
+            function randomDate(start, end) {
+                const d = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                const hours = String(d.getHours()).padStart(2, '0');
+                const minutes = String(d.getMinutes()).padStart(2, '0');
+                return `${month}-${day} ${hours}:${minutes}`;
+            }
+
+            // 锚点：2026年4月1日 ~ 2026年7月31日
+            const START = new Date(2026, 3, 1);
+            const END = new Date(2026, 6, 31);
+
+            // 李雪峰的日常对话
+            const xuefengMessages = [
+                "看到没，我新买的跑步机，在家咱就练起来！🏃",
+                "今天跑了10公里，感觉状态不错！💪",
+                "你最近有没有锻炼啊？不能偷懒哦！",
+                "我昨天去参加了个马拉松，成绩还可以。🏅",
+                "跑步这事儿，坚持就是胜利！",
+                "你知道吗，跑步让我觉得自己还年轻。😎",
+                "要不要一起来跑？我带你！",
+                "今天天气不错，适合户外跑。🌤️",
+                "我刚跑完，感觉整个人都通透了。",
+                "跑步装备很重要，我最近新买了双跑鞋。👟"
+            ];
+
+            // ---------- 状态 ----------
+            let chatEnded = false;
+            let optionsChosen = false;
+            let messageCount = 0;
+            let isProcessing = false;
+
+            // DOM 元素
+            const chatArea = document.getElementById('chatArea');
+            const optionsContainer = document.getElementById('optionsContainer');
+            const chatInput = document.getElementById('chatInput');
+            const sendBtn = document.getElementById('sendBtn');
+
+            // ---------- 渲染消息 ----------
+            function addMessage(text, sender, timestamp) {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `message ${sender}`;
+                msgDiv.innerHTML = `${text}<div class="timestamp">${timestamp}</div>`;
+                chatArea.appendChild(msgDiv);
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+
+            function addSystemMessage(text) {
+                const div = document.createElement('div');
+                div.style.cssText = `
+                    text-align: center; font-size: 13px; color: #999;
+                    padding: 6px 0; font-style: italic;
+                `;
+                div.textContent = text;
+                chatArea.appendChild(div);
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+
+            // ---------- 生成随机日常对话 ----------
+            function generateDailyMessages(count) {
+                const shuffled = [...xuefengMessages].sort(() => Math.random() - 0.5);
+                return shuffled.slice(0, count);
+            }
+
+            let dailyQueue = [];
+            let isSendingDaily = false;
+
+            function sendNextDaily() {
+                if (chatEnded || dailyQueue.length === 0 || optionsChosen) {
+                    isSendingDaily = false;
+                    return;
+                }
+                isSendingDaily = true;
+                const text = dailyQueue.shift();
+                const time = randomDate(START, END);
+                addMessage(text, 'xuefeng', time);
+                messageCount++;
+
+                if (dailyQueue.length === 0 && !optionsChosen && !chatEnded) {
+                    showOptions();
+                }
+                isSendingDaily = false;
+
+                if (dailyQueue.length > 0 && !optionsChosen && !chatEnded) {
+                    setTimeout(sendNextDaily, 1200 + Math.random() * 800);
+                }
+            }
+
+            function startDailyChat() {
+                if (chatEnded) return;
+                const count = 3 + Math.floor(Math.random() * 2);
+                const msgs = generateDailyMessages(count);
+                dailyQueue = msgs;
+                optionsContainer.innerHTML = '';
+                optionsChosen = false;
+
+                setTimeout(() => {
+                    if (!chatEnded && !optionsChosen) {
+                        sendNextDaily();
+                    }
+                }, 500);
+            }
+
+            // ---------- 显示选项 ----------
+            function showOptions() {
+                if (chatEnded || optionsChosen) return;
+                optionsChosen = true;
+
+                optionsContainer.innerHTML = '';
+
+                const btn1 = document.createElement('button');
+                btn1.className = 'option-btn';
+                btn1.textContent = '❓ 说正事，你不是现实认识张子轩吗？他去哪了？';
+                btn1.addEventListener('click', function() {
+                    if (chatEnded) return;
+                    handleOption1();
+                });
+
+                const btn2 = document.createElement('button');
+                btn2.className = 'option-btn';
+                btn2.textContent = '💔 李哥，你嘴唇发紫，可能心脏不好';
+                btn2.addEventListener('click', function() {
+                    if (chatEnded) return;
+                    handleOption2();
+                });
+
+                optionsContainer.appendChild(btn1);
+                optionsContainer.appendChild(btn2);
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+
+            // ---------- 处理选项1 ----------
+            function handleOption1() {
+                if (chatEnded || isProcessing) return;
+                isProcessing = true;
+                document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+
+                const time1 = randomDate(START, END);
+                addMessage('说正事，你不是现实认识张子轩吗？他去哪了？', 'me', time1);
+
+                setTimeout(() => {
+                    if (chatEnded) { isProcessing = false; return; }
+                    const time2 = randomDate(START, END);
+                    addMessage('我记得，他上次好像说要去那个什么"扁渔巴释海洋运输公司"来着，你可以上网查查。', 'xuefeng', time2);
+
+                    setTimeout(() => {
+                        endChat();
+                        isProcessing = false;
+                    }, 600);
+                }, 800);
+            }
+
+            // ---------- 处理选项2 ----------
+            function handleOption2() {
+                if (chatEnded || isProcessing) return;
+                isProcessing = true;
+                document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+
+                const time1 = randomDate(START, END);
+                addMessage('李哥，你嘴唇发紫，可能心脏不好', 'me', time1);
+
+                setTimeout(() => {
+                    if (chatEnded) { isProcessing = false; return; }
+                    const time2 = randomDate(START, END);
+                    addMessage('你跑不过我，你信吗？我一个跑半马的人，你说我心脏不好？😤', 'xuefeng', time2);
+
+                    setTimeout(() => {
+                        if (chatEnded) { isProcessing = false; return; }
+                        const time3 = randomDate(START, END);
+                        addMessage('算了算了，说正事吧，我记得你现实认识张子轩来着，他去哪了？', 'me', time3);
+
+                        setTimeout(() => {
+                            if (chatEnded) { isProcessing = false; return; }
+                            const time4 = randomDate(START, END);
+                            addMessage('我记得，他上次好像说要去那个什么"扁渔巴释海洋运输公司"来着，你可以上网查查。', 'xuefeng', time4);
+
+                            setTimeout(() => {
+                                endChat();
+                                isProcessing = false;
+                            }, 600);
+                        }, 700);
+                    }, 700);
+                }, 800);
+            }
+
+            // ---------- 结束聊天 ----------
+            function endChat() {
+                if (chatEnded) return;
+                chatEnded = true;
+                chatInput.disabled = true;
+                sendBtn.disabled = true;
+                document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+                addSystemMessage('💬 聊天已结束');
+            }
+
+            // ---------- 返回按钮 ----------
+            document.getElementById('backBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.href = 'qq.html';
+            });
+
+            // ---------- 初始化 ----------
+            function initChat() {
+                chatArea.innerHTML = '';
+                startDailyChat();
+            }
+
+            initChat();
+            console.log('xuefeng.html 已加载 — 与李雪峰的聊天');
+        })();
+    </script>
+
+</body>
+</html>
