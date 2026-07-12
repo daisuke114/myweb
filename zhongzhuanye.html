@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>搜索结果 · 中专业</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 16px 16px 30px;
+        }
+
+        /* ---------- 顶部导航 (类似浏览器) ---------- */
+        .header {
+            background: #ffffff;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-radius: 12px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+            margin-bottom: 16px;
+            flex-shrink: 0;
+        }
+
+        .back-btn {
+            font-size: 22px;
+            cursor: pointer;
+            color: #5f6368;
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: background 0.15s;
+            line-height: 1;
+        }
+        .back-btn:hover { background: #f1f3f4; }
+        .back-btn:active { background: #e8eaed; }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #202124;
+            flex: 1;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 6px;
+        }
+        .header-actions span {
+            font-size: 18px;
+            color: #5f6368;
+            padding: 4px 6px;
+            border-radius: 6px;
+            cursor: default;
+            transition: background 0.15s;
+        }
+        .header-actions span:hover { background: #f1f3f4; }
+
+        /* ---------- 搜索结果容器 ---------- */
+        .results-container {
+            max-width: 720px;
+            width: 100%;
+            margin: 0 auto;
+            flex: 1;
+        }
+
+        /* 结果统计 */
+        .result-stats {
+            font-size: 14px;
+            color: #70757a;
+            padding: 8px 0 16px 0;
+            border-bottom: 1px solid #e8eaed;
+            margin-bottom: 18px;
+        }
+        .result-stats strong {
+            color: #202124;
+            font-weight: 600;
+        }
+
+        /* 单条结果 - 可点击 */
+        .result-item {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+            transition: box-shadow 0.15s, background 0.15s;
+            border: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+        .result-item:hover {
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            background: #fafbfc;
+        }
+        .result-item:active {
+            background: #f0f1f2;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #1a0dab;
+            margin-bottom: 4px;
+            pointer-events: none;
+        }
+        .result-title:hover { text-decoration: underline; }
+
+        .result-link {
+            font-size: 13px;
+            color: #006621;
+            margin-bottom: 6px;
+            word-break: break-all;
+            pointer-events: none;
+        }
+
+        .result-desc {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #4d5156;
+            pointer-events: none;
+        }
+
+        .result-desc .highlight {
+            background: #f9f1a5;
+            font-weight: 500;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+
+        /* 无结果提示 */
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #70757a;
+            font-size: 16px;
+        }
+        .no-results .big-icon {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        /* ---------- 自定义弹窗 ---------- */
+        .custom-alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .custom-alert-overlay.show {
+            display: flex;
+        }
+        .custom-alert-box {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 28px 32px 24px;
+            max-width: 360px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadePop 0.2s ease-out;
+        }
+        @keyframes fadePop {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .custom-alert-box .alert-icon {
+            font-size: 48px;
+            margin-bottom: 8px;
+        }
+        .custom-alert-box .alert-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 6px;
+        }
+        .custom-alert-box .alert-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+        .custom-alert-box .alert-btn {
+            background: #e8eaed;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 32px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .custom-alert-box .alert-btn:hover {
+            background: #d0d0d0;
+        }
+
+        /* ---------- 底部 ---------- */
+        .footer {
+            text-align: center;
+            padding: 20px 16px 8px;
+            color: #9aa0a6;
+            font-size: 12px;
+            flex-shrink: 0;
+            max-width: 720px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .footer span { margin: 0 8px; }
+
+        /* ---------- 响应式 ---------- */
+        @media (max-width: 480px) {
+            body { padding: 10px 10px 20px; }
+            .header { padding: 8px 12px; }
+            .result-item { padding: 12px 14px; }
+            .result-title { font-size: 16px; }
+            .result-desc { font-size: 13px; }
+            .result-stats { font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航 -->
+    <div class="header">
+        <a href="liulanqi.html" class="back-btn">‹</a>
+        <span class="header-title">🔍 搜索结果</span>
+        <div class="header-actions">
+            <span>⟳</span>
+            <span>⋯</span>
+        </div>
+    </div>
+
+    <!-- 搜索结果 -->
+    <div class="results-container" id="resultsContainer">
+        <!-- 由 JavaScript 动态渲染 -->
+    </div>
+
+    <!-- 自定义弹窗 -->
+    <div class="custom-alert-overlay" id="alertOverlay">
+        <div class="custom-alert-box">
+            <div class="alert-icon">📢</div>
+            <div class="alert-title" id="alertTitle">提示</div>
+            <div class="alert-desc" id="alertDesc">内容</div>
+            <button class="alert-btn" id="alertConfirmBtn">我知道了</button>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+        <span>🔒 安全搜索</span>
+        <span>•</span>
+        <span>🌐 中专业 · 模拟引擎</span>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ---------- 弹窗系统 ----------
+            const alertOverlay = document.getElementById('alertOverlay');
+            const alertTitle = document.getElementById('alertTitle');
+            const alertDesc = document.getElementById('alertDesc');
+            const alertConfirmBtn = document.getElementById('alertConfirmBtn');
+
+            function showCustomAlert(title, desc) {
+                alertTitle.textContent = title || '提示';
+                alertDesc.textContent = desc || '操作已执行。';
+                alertOverlay.classList.add('show');
+            }
+
+            function hideCustomAlert() {
+                alertOverlay.classList.remove('show');
+            }
+
+            alertConfirmBtn.addEventListener('click', hideCustomAlert);
+            alertOverlay.addEventListener('click', function(e) {
+                if (e.target === this) hideCustomAlert();
+            });
+
+            // ---------- 从 URL 获取搜索关键词 ----------
+            function getSearchQuery() {
+                const params = new URLSearchParams(window.location.search);
+                let query = params.get('q') || params.get('keyword') || '';
+                try {
+                    query = decodeURIComponent(query);
+                } catch (e) {}
+                return query.trim();
+            }
+
+            // ---------- 搜索结果数据（带点击动作） ----------
+            const resultData = {
+                '扁渔巴释海洋运输公司': {
+                    total: 3,
+                    items: [
+                        {
+                            title: '扁渔巴释海洋运输公司 - 官方网站',
+                            link: 'http://www.bianyubashi-shipping.com',
+                            desc: '扁渔巴释海洋运输公司成立于1998年，是一家专注于国际海运、货物代理及船舶管理的综合性航运企业。公司总部位于上海，业务覆盖全球主要港口。',
+                            action: 'linbus1.html'
+                        },
+                        {
+                            title: '扁渔巴释海洋运输公司 招聘信息 | 海员岗位',
+                            link: 'http://www.bianyubashi-shipping.com/careers',
+                            desc: '扁渔巴释海洋运输公司诚聘海员、轮机工程师、物流专员等岗位。提供具有竞争力的薪资和全面的海上保险，欢迎有志于航海事业的英才加入。',
+                            action: 'linbus2.html'
+                        },
+                        {
+                            title: '扁渔巴释海洋运输公司 - 百科',
+                            link: 'https://baike.baidu.com/item/扁渔巴释海洋运输公司',
+                            desc: '扁渔巴释海洋运输公司（Bian Yu Ba Shi Shipping Co., Ltd.）是中国知名的民营航运企业之一，拥有自有船舶20余艘，航线覆盖东南亚、欧洲及美洲地区。',
+                            action: 'alert:此百科已被删除。'
+                        }
+                    ]
+                },
+                '扁渔巴释': {
+                    total: 2,
+                    items: [
+                        {
+                            title: '扁渔巴释海洋运输公司 - 官方网站',
+                            link: 'http://www.bianyubashi-shipping.com',
+                            desc: '扁渔巴释海洋运输公司成立于1998年，是一家专注于国际海运、货物代理及船舶管理的综合性航运企业。',
+                            action: 'linbus1.html'
+                        },
+                        {
+                            title: '扁渔巴释 - 相关新闻与动态',
+                            link: 'http://www.bianyubashi-shipping.com/news',
+                            desc: '扁渔巴释近期动态：公司宣布新增3条东南亚航线，并引进新型集装箱船。同时，公司积极参与海上救援和环保公益项目。',
+                            action: 'linbus3.html'
+                        }
+                    ]
+                }
+            };
+
+            // ---------- 高亮关键词 ----------
+            function highlightText(text, keyword) {
+                if (!keyword || !text) return text;
+                const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = new RegExp('(' + escaped + ')', 'gi');
+                return text.replace(regex, '<span class="highlight">$1</span>');
+            }
+
+            // ---------- 渲染搜索结果 ----------
+            function renderResults() {
+                const container = document.getElementById('resultsContainer');
+                const query = getSearchQuery();
+
+                let data = null;
+                let matchedKey = null;
+
+                if (query === '扁渔巴释海洋运输公司') {
+                    data = resultData['扁渔巴释海洋运输公司'];
+                    matchedKey = '扁渔巴释海洋运输公司';
+                } else if (query === '扁渔巴释') {
+                    data = resultData['扁渔巴释'];
+                    matchedKey = '扁渔巴释';
+                } else {
+                    if (query.includes('扁渔巴释海洋运输公司')) {
+                        data = resultData['扁渔巴释海洋运输公司'];
+                        matchedKey = '扁渔巴释海洋运输公司';
+                    } else if (query.includes('扁渔巴释')) {
+                        data = resultData['扁渔巴释'];
+                        matchedKey = '扁渔巴释';
+                    }
+                }
+
+                if (!data) {
+                    if (query.includes('扁渔') || query.includes('渔巴') || query.includes('巴释') || query.includes('运输公司')) {
+                        data = resultData['扁渔巴释'];
+                        matchedKey = '扁渔巴释';
+                    } else {
+                        data = { total: 0, items: [] };
+                    }
+                }
+
+                if (!data || data.items.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-results">
+                            <span class="big-icon">🔍</span>
+                            未找到与 "<strong>${query}</strong>" 相关的结果<br>
+                            <span style="font-size:14px;color:#9aa0a6;">建议您检查关键词拼写，或尝试使用更通用的词语进行搜索（提示：也许可以搜索李雪峰之前提到的“扁渔巴释”和“扁渔巴释海洋运输公司”）。</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const total = data.total || data.items.length;
+                const statsHTML = `共有 <strong>${total}</strong> 项符合条件的搜索结果`;
+
+                let itemsHTML = '';
+                data.items.forEach((item, index) => {
+                    const highlightedDesc = highlightText(item.desc, matchedKey || query);
+                    const actionAttr = item.action || '';
+                    const dataAction = actionAttr.startsWith('alert:') ? 'alert' : 'link';
+                    const dataTarget = actionAttr.startsWith('alert:') ? actionAttr.substring(6) : actionAttr;
+
+                    itemsHTML += `
+                        <div class="result-item" data-action="${dataAction}" data-target="${dataTarget}" data-index="${index}">
+                            <div class="result-title">${item.title}</div>
+                            <div class="result-link">${item.link}</div>
+                            <div class="result-desc">${highlightedDesc}</div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = `
+                    <div class="result-stats">${statsHTML}</div>
+                    ${itemsHTML}
+                `;
+
+                // ---------- 绑定点击事件 ----------
+                document.querySelectorAll('.result-item').forEach(el => {
+                    el.addEventListener('click', function(e) {
+                        const action = this.dataset.action;
+                        const target = this.dataset.target;
+
+                        if (action === 'alert') {
+                            showCustomAlert('哦不！', target || '此内容已被删除。');
+                        } else if (action === 'link' && target) {
+                            window.location.href = target;
+                        } else {
+                            console.log('点击了未配置的结果项');
+                        }
+                    });
+                });
+            }
+
+            // ---------- 执行渲染 ----------
+            renderResults();
+
+            console.log('zhongzhuanye.html 已加载');
+            console.log('🔍 搜索关键词: "' + getSearchQuery() + '"');
+            console.log('💡 点击结果项可跳转或弹窗');
+        })();
+    </script>
+
+</body>
+</html>
